@@ -4,112 +4,171 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Page Title</title>
+      <!-- Load font awesome icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
 
 <style>
-/* The navigation menu */
+/* General page styling */
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+}
+
+/* Header */
+header {
+    padding: 20px;
+}
+
+/* Navigation menu */
 .navbar {
-  overflow: hidden;
-  background-color: #333;
+    display: flex;
+    background-color: #333;
 }
 
 /* Navigation links */
-.navbar a {
-  float: left;
-  font-size: 16px;
-  color: white;
-  text-align: center;
-  padding: 14px 16px;
-  text-decoration: none;
+.navbar a,
+.subnavbtn {
+    color: white;
+    padding: 14px 16px;
+    font-size: 16px;
+    text-decoration: none;
 }
 
-/* The subnavigation menu */
+/* Subnavigation */
 .subnav {
-  float: left;
-  overflow: hidden;
+    position: relative;
 }
 
-/* Subnav button */
-.subnav .subnavbtn {
-  font-size: 16px;
-  border: none;
-  outline: none;
-  color: white;
-  padding: 14px 16px;
-  background-color: inherit;
-  font-family: inherit;
-  margin: 0;
+/* Subnavigation button */
+.subnavbtn {
+    border: none;
+    background-color: inherit;
+    font-family: inherit;
+    cursor: pointer;
 }
 
-/* Add a red background color to navigation links on hover */
-.navbar a:hover, .subnav:hover .subnavbtn {
-  background-color: red;
+/* Hover effects */
+.navbar a:hover,
+.subnav:hover .subnavbtn,
+.subnav:focus-within .subnavbtn {
+    background-color: red;
 }
 
-/* Style the subnav content - positioned absolute */
+/* Dropdown menu */
 .subnav-content {
-  display: none;
-  position: absolute;
-  left: 0;
-  background-color: red;
-  width: 100%;
-  z-index: 1;
+    display: none;
+    position: absolute;
+    left: 0;
+    top: 100%;
+    min-width: 250px;
+    background-color: red;
+    z-index: 10;
 }
 
-/* Style the subnav links */
+/* Dropdown links */
 .subnav-content a {
-  float: left;
-  color: white;
-  text-decoration: none;
+    display: block;
+    padding: 12px 16px;
 }
 
-/* Add a grey background color on hover */
+/* Dropdown hover */
 .subnav-content a:hover {
-  background-color: #eee;
-  color: black;
+    background-color: #eee;
+    color: black;
 }
 
-/* When you move the mouse over the subnav container, open the subnav content */
-.subnav:hover .subnav-content {
-  display: block;
+/* Show dropdown */
+.subnav:hover .subnav-content,
+.subnav:focus-within .subnav-content {
+    display: block;
 }
-    
+
+/* Footer */
+footer {
+    margin-top: 40px;
+    padding: 20px;
+}
+
+/* Mobile layout */
+@media (max-width: 600px) {
+    .navbar {
+        flex-direction: column;
+    }
+
+    .subnav-content {
+        position: static;
+        width: 100%;
+    }
+
+    .navbar a,
+    .subnavbtn {
+        display: block;
+        width: 100%;
+        text-align: left;
+        box-sizing: border-box;
+    }
+}
+
 </style>
 
     
 </head>
-
+        
 <body>
-    <h1>This is for COP4813</h1>
-    <h2>I copy most of this from W3School and modified it</h2>
-    <br>
-    <!-- Load font awesome icons -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
-<!-- The navigation menu -->
-<div class="navbar">
-  <a href="https://magmakingfj.github.io/COP4813/">Home</a>
-  <div class="subnav">
-    <button class="subnavbtn">My Classes <i class="fa fa-caret-down"></i></button>
-    <div class="subnav-content">
-      <a href="https://class.daytonastate.edu/d2l/home/511809">COP 4813 - Web Systems I</a>
-      <a href="https://class.daytonastate.edu/d2l/home/511711">CEN 4801 - Systems Integration</a>
- 
-    </div>
-  </div>
-  <div class="subnav">
-    <button class="subnavbtn">My Assignments <i class="fa fa-caret-down"></i></button>
-    <div class="subnav-content">
-      <a href="https://class.daytonastate.edu/d2l/lms/dropbox/user/folder_submit_files.d2l?db=1437238&grpid=0&isprv=&bp=0&ou=511809">Assignment 1 - Hello World</a>
-      <a href="https://class.daytonastate.edu/d2l/lms/dropbox/user/folder_submit_files.d2l?db=1437239&grpid=0&isprv=0&bp=0&ou=511809">Assignment 2 - Web Site</a>
-      <a href="https://class.daytonastate.edu/d2l/lms/dropbox/user/folder_submit_files.d2l?db=1437240&grpid=0&isprv=0&bp=0&ou=511809">Assignment 3 - Forms</a>
- 
-    </div>
-  </div>
-</div>
+    <header>
+        <h1>This is for COP4813</h1>
+        <p>I copied most of this from W3Schools and modified it.</p>
+    </header>
+
+    <nav class="navbar" aria-label="Main navigation">
+        <a href="https://magmakingfj.github.io/COP4813/">Home</a>
+
+        <div class="subnav">
+            <button class="subnavbtn">
+                My Classes <i class="fa fa-caret-down"></i>
+            </button>
+
+            <div class="subnav-content">
+                <a href="https://class.daytonastate.edu/d2l/home/511809">
+                    COP 4813 - Web Systems I
+                </a>
+                <a href="https://class.daytonastate.edu/d2l/home/511711">
+                    CEN 4801 - Systems Integration
+                </a>
+            </div>
+        </div>
+
+        <div class="subnav">
+            <button class="subnavbtn">
+                My Assignments <i class="fa fa-caret-down"></i>
+            </button>
+
+            <div class="subnav-content">
+                <a href="https://class.daytonastate.edu/d2l/lms/dropbox/user/folder_submit_files.d2l?db=1437238&grpid=0&isprv=&bp=0&ou=511809">
+                    Assignment 1 - Hello World
+                </a>
+                <a href="https://class.daytonastate.edu/d2l/lms/dropbox/user/folder_submit_files.d2l?db=1437239&grpid=0&isprv=0&bp=0&ou=511809">
+                    Assignment 2 - Web Site
+                </a>
+                <a href="https://class.daytonastate.edu/d2l/lms/dropbox/user/folder_submit_files.d2l?db=1437240&grpid=0&isprv=0&bp=0&ou=511809">
+                    Assignment 3 - Forms
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <main>
+        <!-- Page content can go here -->
+    </main>
 
     <footer>
-        <p> Created by Jean Fouquet  </p>
+        <p>Created by Jean Fouquet</p>
     </footer>
+
+</body>
+</html>
 
 </body>
 </html>
