@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Confirm Information</title>
+
+    <style>
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+
+        header {
+            padding: 20px;
+            background-color: white;
+        }
+
+        header h1 {
+            margin: 0;
+        }
+
+        .confirmation-container {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 30px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+        }
+
+        h2 {
+            text-align: center;
+        }
+
+        .confirmation-message {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .information {
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .row {
+            display: flex;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .row:last-child {
+            border-bottom: none;
+        }
+
+        .label {
+            width: 30%;
+            padding: 12px;
+            font-weight: bold;
+            background-color: #eee;
+        }
+
+        .value {
+            width: 70%;
+            padding: 12px;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        button {
+            flex: 1;
+            padding: 14px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .confirm {
+            background-color: #333;
+            color: white;
+        }
+
+        .confirm:hover {
+            background-color: red;
+        }
+
+        .edit {
+            background-color: #ddd;
+            color: #333;
+        }
+
+        .edit:hover {
+            background-color: #bbb;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+        }
+
+        @media (max-width: 600px) {
+
+            .confirmation-container {
+                margin: 20px;
+                padding: 20px;
+            }
+
+            .row {
+                flex-direction: column;
+            }
+
+            .label,
+            .value {
+                width: auto;
+            }
+
+            .buttons {
+                flex-direction: column;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+    <header>
+        <h1>This is for COP4813</h1>
+    </header>
+
+
+    <div class="confirmation-container">
+
+        <h2>Confirm Your Information</h2>
+
+        <p class="confirmation-message">
+            Please review the information below.
+            If everything is correct, click "Confirm and Send."
+        </p>
+
+
+        <div class="information">
+
+            <div class="row">
+                <div class="label">Name</div>
+                <div class="value" id="name"></div>
+            </div>
+
+            <div class="row">
+                <div class="label">Address</div>
+                <div class="value" id="address"></div>
+            </div>
+
+            <div class="row">
+                <div class="label">Phone</div>
+                <div class="value" id="phone"></div>
+            </div>
+
+            <div class="row">
+                <div class="label">Email</div>
+                <div class="value" id="email"></div>
+            </div>
+
+            <div class="row">
+                <div class="label">Birth Date</div>
+                <div class="value" id="birthdate"></div>
+            </div>
+
+            <div class="row">
+                <div class="label">Message</div>
+                <div class="value" id="message"></div>
+            </div>
+
+        </div>
+
+
+        <div class="buttons">
+
+            <button
+                class="edit"
+                onclick="window.location.href='assignment3.html'">
+                Go Back and Edit
+            </button>
+
+            <button
+                class="confirm"
+                onclick="sendEmail()">
+                Confirm and Send
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <footer>
+        <p>Created by Jean Fouquet</p>
+    </footer>
+
+
+    <script>
+
+        const savedData =
+            sessionStorage.getItem("assignment3FormData");
+
+
+        if (!savedData) {
+
+            alert("No form information was found.");
+
+            window.location.href = "assignment3.html";
+
+        }
+
+
+        const data =
+            JSON.parse(savedData);
+
+
+        document.getElementById("name").textContent =
+            data.firstname + " " + data.lastname;
+
+
+        document.getElementById("address").textContent =
+            data.address + ", " +
+            data.city + ", " +
+            data.state + " " +
+            data.zip;
+
+
+        document.getElementById("phone").textContent =
+            data.phone;
+
+
+        document.getElementById("email").textContent =
+            data.email;
+
+
+        document.getElementById("birthdate").textContent =
+            data.birthdate;
+
+
+        document.getElementById("message").textContent =
+            data.message;
+
+
+        /*
+         * Change this to YOUR email address.
+         */
+        function sendEmail() {
+
+            const destinationEmail =
+                "jfouquet12@gmail.com";
+
+
+            const subject =
+                "COP4813 Assignment 3 Form Submission";
+
+
+            const body =
+                "COP4813 Assignment 3 Form Submission\n\n" +
+
+                "Name: " +
+                data.firstname + " " +
+                data.lastname + "\n\n" +
+
+                "Address: " +
+                data.address + ", " +
+                data.city + ", " +
+                data.state + " " +
+                data.zip + "\n\n" +
+
+                "Phone: " +
+                data.phone + "\n\n" +
+
+                "Email: " +
+                data.email + "\n\n" +
+
+                "Birth Date: " +
+                data.birthdate + "\n\n" +
+
+                "Message:\n" +
+                data.message;
+
+
+            const mailto =
+                "mailto:" +
+                destinationEmail +
+                "?subject=" +
+                encodeURIComponent(subject) +
+                "&body=" +
+                encodeURIComponent(body);
+
+
+            window.location.href = mailto;
+
+        }
+
+    </script>
+
+</body>
+</html>
