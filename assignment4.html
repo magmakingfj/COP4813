@@ -1,0 +1,1144 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Assignment 4 - Plotting</title>
+
+    <!-- Load font awesome icons -->
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <!-- Load Highcharts -->
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+
+
+<style>
+
+/* General page styling */
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+}
+
+
+/* Header */
+
+header {
+    padding: 20px;
+    background-color: white;
+}
+
+
+/* Navigation menu */
+
+.navbar {
+    display: flex;
+    background-color: #333;
+}
+
+
+/* Navigation links */
+
+.navbar a,
+.subnavbtn {
+    color: white;
+    padding: 14px 16px;
+    font-size: 16px;
+    text-decoration: none;
+}
+
+
+/* Subnavigation */
+
+.subnav {
+    position: relative;
+}
+
+
+/* Subnavigation button */
+
+.subnavbtn {
+    border: none;
+    background-color: inherit;
+    font-family: inherit;
+    cursor: pointer;
+}
+
+
+/* Hover effects */
+
+.navbar a:hover,
+.subnav:hover .subnavbtn,
+.subnav:focus-within .subnavbtn {
+    background-color: red;
+}
+
+
+/* Dropdown menu */
+
+.subnav-content {
+    display: none;
+    position: absolute;
+    left: 0;
+    top: 100%;
+    min-width: 250px;
+    background-color: red;
+    z-index: 10;
+}
+
+
+/* Dropdown links */
+
+.subnav-content a {
+    display: block;
+    padding: 12px 16px;
+}
+
+
+/* Dropdown hover */
+
+.subnav-content a:hover {
+    background-color: #eee;
+    color: black;
+}
+
+
+/* Show dropdown */
+
+.subnav:hover .subnav-content,
+.subnav:focus-within .subnav-content {
+    display: block;
+}
+
+
+/* Main page content */
+
+main {
+    max-width: 1000px;
+    margin: 40px auto;
+    padding: 30px;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+}
+
+
+/* Assignment title */
+
+h2 {
+    text-align: center;
+}
+
+
+/* Description */
+
+.description {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+
+/* Equation box */
+
+.equation {
+    background-color: #eeeeee;
+    padding: 20px;
+    margin-bottom: 30px;
+    border-radius: 5px;
+    text-align: center;
+    font-size: 20px;
+}
+
+
+/* Calculator input area */
+
+.calculator {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+
+/* Input groups */
+
+.input-group {
+    display: flex;
+    flex-direction: column;
+}
+
+
+/* Input labels */
+
+.input-group label {
+    font-weight: bold;
+    margin-bottom: 7px;
+}
+
+
+/* Input boxes */
+
+.input-group input {
+    padding: 10px;
+    border: 1px solid #aaa;
+    border-radius: 5px;
+    font-size: 16px;
+    box-sizing: border-box;
+}
+
+
+/* Buttons */
+
+.button-area {
+    grid-column: 1 / -1;
+
+    display: flex;
+
+    gap: 15px;
+
+    margin-top: 10px;
+}
+
+
+/* Calculate and Plot buttons */
+
+.calculate-button,
+.plot-button {
+
+    flex: 1;
+
+    padding: 14px;
+
+    border: none;
+
+    border-radius: 5px;
+
+    background-color: #333;
+
+    color: white;
+
+    font-size: 17px;
+
+    cursor: pointer;
+}
+
+
+/* Button hover */
+
+.calculate-button:hover,
+.plot-button:hover {
+    background-color: red;
+}
+
+
+/* Disabled Plot button */
+
+.plot-button:disabled {
+
+    background-color: #999;
+
+    cursor: not-allowed;
+
+}
+
+
+/* Results section */
+
+.results {
+
+    display: none;
+
+    margin-top: 40px;
+
+}
+
+
+/* Results heading */
+
+.results h3 {
+
+    text-align: center;
+
+}
+
+
+/* Results table */
+
+.results-table {
+
+    width: 100%;
+
+    border-collapse: collapse;
+
+    margin-top: 20px;
+
+}
+
+
+/* Table cells */
+
+.results-table th,
+.results-table td {
+
+    border: 1px solid #ccc;
+
+    padding: 8px;
+
+    text-align: center;
+
+}
+
+
+/* Table header */
+
+.results-table th {
+
+    background-color: #333;
+
+    color: white;
+
+}
+
+
+/* Chart */
+
+#chart {
+
+    display: none;
+
+    width: 100%;
+
+    height: 500px;
+
+    margin-top: 40px;
+
+}
+
+
+/* Footer */
+
+footer {
+
+    margin-top: 40px;
+
+    padding: 20px;
+
+    text-align: center;
+
+}
+
+
+/* Mobile layout */
+
+@media (max-width: 600px) {
+
+    .navbar {
+
+        flex-direction: column;
+
+    }
+
+
+    .subnav-content {
+
+        position: static;
+
+        width: 100%;
+
+    }
+
+
+    .navbar a,
+    .subnavbtn {
+
+        display: block;
+
+        width: 100%;
+
+        text-align: left;
+
+        box-sizing: border-box;
+
+    }
+
+
+    main {
+
+        margin: 20px;
+
+        padding: 20px;
+
+    }
+
+
+    .calculator {
+
+        grid-template-columns: 1fr;
+
+    }
+
+
+    .button-area {
+
+        grid-column: auto;
+
+        flex-direction: column;
+
+    }
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+    <header>
+
+        <h1>This is for COP4813</h1>
+
+    </header>
+
+
+
+    <nav class="navbar" aria-label="Main navigation">
+
+        <a href="https://magmakingfj.github.io/COP4813/">
+            Home
+        </a>
+
+
+        <div class="subnav">
+
+            <button class="subnavbtn">
+
+                My Classes
+
+                <i class="fa fa-caret-down"></i>
+
+            </button>
+
+
+            <div class="subnav-content">
+
+                <a href="https://class.daytonastate.edu/d2l/home/511809">
+
+                    COP 4813 - Web Systems I
+
+                </a>
+
+
+                <a href="https://class.daytonastate.edu/d2l/home/511711">
+
+                    CEN 4801 - Systems Integration
+
+                </a>
+
+            </div>
+
+        </div>
+
+
+
+        <div class="subnav">
+
+            <button class="subnavbtn">
+
+                My Assignments
+
+                <i class="fa fa-caret-down"></i>
+
+            </button>
+
+
+            <div class="subnav-content">
+
+                <a href="https://class.daytonastate.edu/d2l/lms/dropbox/user/folder_submit_files.d2l?db=1437238&grpid=0&isprv=&bp=0&ou=511809">
+
+                    Assignment 1 - Hello World
+
+                </a>
+
+
+                <a href="https://class.daytonastate.edu/d2l/lms/dropbox/user/folder_submit_files.d2l?db=1437239&grpid=0&isprv=0&bp=0&ou=511809">
+
+                    Assignment 2 - Web Site
+
+                </a>
+
+
+                <a href="assignment3.html">
+
+                    Assignment 3 - Forms
+
+                </a>
+
+
+                <a href="assignment4.html">
+
+                    Assignment 4 - Plotting
+
+                </a>
+
+
+                <a href="upcoming.html">
+
+                    Assignment 5 - Canvas
+
+                </a>
+
+
+                <a href="upcoming.html">
+
+                    Assignment 6 - JSON
+
+                </a>
+
+
+                <a href="upcoming.html">
+
+                    Assignment 7 - Drag Drop
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </nav>
+
+
+
+    <main>
+
+
+        <h2>
+            Assignment 4 - JavaScript Calculator and Plot
+        </h2>
+
+
+        <p class="description">
+
+            Enter the values for the Logistic Growth equation
+            and an X range. Click Calculate to display the
+            calculated values. Then click Plot to display the graph.
+
+        </p>
+
+
+
+        <!-- Equation -->
+
+        <div class="equation">
+
+            <strong>
+                Logistic Growth Equation
+            </strong>
+
+            <br><br>
+
+            y = K / (1 + A × e<sup>-rx</sup>)
+
+        </div>
+
+
+
+        <!-- Calculator Inputs -->
+
+        <div class="calculator">
+
+
+            <!-- Carrying Capacity -->
+
+            <div class="input-group">
+
+                <label for="capacity">
+
+                    Carrying Capacity (K)
+
+                </label>
+
+
+                <input
+                    type="number"
+                    id="capacity"
+                    value="1000"
+                    step="1">
+
+            </div>
+
+
+
+            <!-- A Value -->
+
+            <div class="input-group">
+
+                <label for="aValue">
+
+                    A Value
+
+                </label>
+
+
+                <input
+                    type="number"
+                    id="aValue"
+                    value="9"
+                    step="0.1">
+
+            </div>
+
+
+
+            <!-- Growth Rate -->
+
+            <div class="input-group">
+
+                <label for="growthRate">
+
+                    Growth Rate (r)
+
+                </label>
+
+
+                <input
+                    type="number"
+                    id="growthRate"
+                    value="0.5"
+                    step="0.1">
+
+            </div>
+
+
+
+            <!-- X Minimum -->
+
+            <div class="input-group">
+
+                <label for="xMin">
+
+                    X Minimum
+
+                </label>
+
+
+                <input
+                    type="number"
+                    id="xMin"
+                    value="0"
+                    step="1">
+
+            </div>
+
+
+
+            <!-- X Maximum -->
+
+            <div class="input-group">
+
+                <label for="xMax">
+
+                    X Maximum
+
+                </label>
+
+
+                <input
+                    type="number"
+                    id="xMax"
+                    value="20"
+                    step="1">
+
+            </div>
+
+
+
+            <!-- Buttons -->
+
+            <div class="button-area">
+
+
+                <button
+                    type="button"
+                    class="calculate-button"
+                    onclick="calculate()">
+
+                    Calculate
+
+                </button>
+
+
+
+                <button
+                    type="button"
+                    class="plot-button"
+                    id="plotButton"
+                    onclick="plotGraph()"
+                    disabled>
+
+                    Plot
+
+                </button>
+
+
+            </div>
+
+
+        </div>
+
+
+
+        <!-- Results -->
+
+        <div class="results" id="results">
+
+            <h3>
+
+                Calculated Values
+
+            </h3>
+
+
+            <table class="results-table">
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            X
+                        </th>
+
+                        <th>
+                            Y
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody id="resultsBody">
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+
+
+        <!-- Highcharts Graph -->
+
+        <div id="chart"></div>
+
+
+    </main>
+
+
+
+    <footer>
+
+        <p>
+            Created by Jean Fouquet
+        </p>
+
+    </footer>
+
+
+
+    <script>
+
+
+        /*
+         * Array that stores the calculated
+         * X and Y values.
+         *
+         * The Plot button will use this
+         * array to create the graph.
+         */
+
+        let calculatedData = [];
+
+
+
+        /*
+         * Logistic Growth Equation
+         *
+         * y = K / (1 + A * e^(-r*x))
+         */
+
+        function logisticGrowth(K, A, r, x) {
+
+            return K / (1 + A * Math.exp(-r * x));
+
+        }
+
+
+
+        /*
+         * Calculate Function
+         *
+         * This function gets the values
+         * entered by the user and calculates
+         * the Y value for every X value
+         * between the minimum and maximum.
+         */
+
+        function calculate() {
+
+
+            /*
+             * Get the values from the
+             * input boxes.
+             */
+
+            const K =
+                Number(document.getElementById("capacity").value);
+
+
+            const A =
+                Number(document.getElementById("aValue").value);
+
+
+            const r =
+                Number(document.getElementById("growthRate").value);
+
+
+            const xMin =
+                Number(document.getElementById("xMin").value);
+
+
+            const xMax =
+                Number(document.getElementById("xMax").value);
+
+
+
+            /*
+             * Validate the input values.
+             */
+
+            if (
+                K <= 0 ||
+                A <= 0 ||
+                r <= 0
+            ) {
+
+                alert(
+                    "Please enter values greater than zero for K, A, and r."
+                );
+
+                return;
+
+            }
+
+
+
+            /*
+             * Make sure the maximum X
+             * is greater than the minimum X.
+             */
+
+            if (xMax <= xMin) {
+
+                alert(
+                    "X Maximum must be greater than X Minimum."
+                );
+
+                return;
+
+            }
+
+
+
+            /*
+             * Clear any previously
+             * calculated data.
+             */
+
+            calculatedData = [];
+
+
+
+            /*
+             * Clear the previous table.
+             */
+
+            const resultsBody =
+                document.getElementById("resultsBody");
+
+
+            resultsBody.innerHTML = "";
+
+
+
+            /*
+             * Calculate the equation for
+             * every X value in the range.
+             */
+
+            for (
+                let x = xMin;
+                x <= xMax;
+                x++
+            ) {
+
+
+                /*
+                 * Calculate Y.
+                 */
+
+                const y =
+                    logisticGrowth(K, A, r, x);
+
+
+
+                /*
+                 * Store the X and Y values
+                 * for the graph.
+                 */
+
+                calculatedData.push({
+
+                    x: x,
+
+                    y: Number(y.toFixed(2))
+
+                });
+
+
+
+                /*
+                 * Create a new table row.
+                 */
+
+                const row =
+                    document.createElement("tr");
+
+
+
+                /*
+                 * Create the X cell.
+
+                 */
+
+                const xCell =
+                    document.createElement("td");
+
+
+
+                /*
+                 * Create the Y cell.
+
+                 */
+
+                const yCell =
+                    document.createElement("td");
+
+
+
+                /*
+                 * Put the calculated values
+                 * into the cells.
+                 */
+
+                xCell.textContent =
+                    x;
+
+
+                yCell.textContent =
+                    y.toFixed(2);
+
+
+
+                /*
+                 * Add the cells to the row.
+                 */
+
+                row.appendChild(xCell);
+
+                row.appendChild(yCell);
+
+
+
+                /*
+                 * Add the row to the table.
+
+                 */
+
+                resultsBody.appendChild(row);
+
+            }
+
+
+
+            /*
+             * Display the calculated
+             * results table.
+             */
+
+            document.getElementById("results").style.display =
+                "block";
+
+
+
+            /*
+             * Enable the Plot button
+             * because calculations now exist.
+             */
+
+            document.getElementById("plotButton").disabled =
+                false;
+
+
+
+            /*
+             * Hide any previous graph.
+             *
+             * The user must click Plot
+             * again after recalculating.
+             */
+
+            document.getElementById("chart").style.display =
+                "none";
+
+
+        }
+
+
+
+        /*
+         * Plot Function
+         *
+         * This function takes the values
+         * calculated above and creates
+         * the Highcharts graph.
+         */
+
+        function plotGraph() {
+
+
+            /*
+             * Make sure Calculate was
+             * pressed first.
+             */
+
+            if (calculatedData.length === 0) {
+
+                alert(
+                    "Please click Calculate before clicking Plot."
+                );
+
+                return;
+
+            }
+
+
+
+            /*
+             * Convert the calculated data
+             * into the format Highcharts uses.
+             */
+
+            const chartData =
+                calculatedData.map(function(point) {
+
+                    return [
+                        point.x,
+                        point.y
+                    ];
+
+                });
+
+
+
+            /*
+             * Display the chart area.
+             */
+
+            document.getElementById("chart").style.display =
+                "block";
+
+
+
+            /*
+             * Create the Highcharts graph.
+             */
+
+            Highcharts.chart("chart", {
+
+
+                /*
+                 * Chart title.
+                 */
+
+                title: {
+
+                    text: "Logistic Growth"
+
+                },
+
+
+                /*
+                 * X Axis.
+                 */
+
+                xAxis: {
+
+                    title: {
+
+                        text: "X"
+
+                    }
+
+                },
+
+
+                /*
+                 * Y Axis.
+                 */
+
+                yAxis: {
+
+                    title: {
+
+                        text: "Y"
+
+                    }
+
+                },
+
+
+                /*
+                 * Data series.
+                 */
+
+                series: [{
+
+                    name: "Logistic Growth",
+
+                    data: chartData
+
+                }]
+
+
+            });
+
+        }
+
+
+    </script>
+
+
+</body>
+
+</html>
