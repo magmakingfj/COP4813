@@ -1,0 +1,724 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Assignment 5 - Canvas Spirograph</title>
+
+    <!-- Load Font Awesome icons -->
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <style>
+        /* General page styling */
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+        }
+
+        /* Header */
+        header {
+            padding: 20px;
+            background-color: white;
+        }
+
+        /* Navigation menu */
+        .navbar {
+            display: flex;
+            background-color: #333;
+        }
+
+        /* Navigation links */
+        .navbar a,
+        .subnavbtn {
+            color: white;
+            padding: 14px 16px;
+            font-size: 16px;
+            text-decoration: none;
+        }
+
+        /* Subnavigation */
+        .subnav {
+            position: relative;
+        }
+
+        /* Subnavigation button */
+        .subnavbtn {
+            border: none;
+            background-color: inherit;
+            font-family: inherit;
+            cursor: pointer;
+        }
+
+        /* Hover effects */
+        .navbar a:hover,
+        .subnav:hover .subnavbtn,
+        .subnav:focus-within .subnavbtn {
+            background-color: red;
+        }
+
+        /* Dropdown menu */
+        .subnav-content {
+            display: none;
+            position: absolute;
+            left: 0;
+            top: 100%;
+            min-width: 250px;
+            background-color: red;
+            z-index: 10;
+        }
+
+        /* Dropdown links */
+        .subnav-content a {
+            display: block;
+            padding: 12px 16px;
+        }
+
+        /* Dropdown hover */
+        .subnav-content a:hover {
+            background-color: #eee;
+            color: black;
+        }
+
+        /* Show dropdown */
+        .subnav:hover .subnav-content,
+        .subnav:focus-within .subnav-content {
+            display: block;
+        }
+
+        /* Main content */
+        main {
+            max-width: 1100px;
+            margin: 35px auto;
+            padding: 30px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.12);
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+        }
+
+        .description {
+            text-align: center;
+            line-height: 1.6;
+            margin-bottom: 25px;
+        }
+
+        /* Equation display */
+        .equation {
+            padding: 20px;
+            margin-bottom: 25px;
+            border-radius: 6px;
+            background-color: #eeeeee;
+            text-align: center;
+            line-height: 1.8;
+            font-size: 18px;
+        }
+
+        /* Input section */
+        .controls {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .input-group label {
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .input-group input {
+            padding: 11px;
+            border: 1px solid #aaa;
+            border-radius: 5px;
+            font-size: 16px;
+            box-sizing: border-box;
+            width: 100%;
+        }
+
+        .input-group small {
+            margin-top: 6px;
+            color: #666;
+            line-height: 1.4;
+        }
+
+        /* Start button */
+        .button-area {
+            text-align: center;
+            margin: 25px 0;
+        }
+
+        .start-button {
+            background-color: #333;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 14px 28px;
+            font-size: 17px;
+            cursor: pointer;
+        }
+
+        .start-button:hover {
+            background-color: red;
+        }
+
+        .start-button:disabled {
+            background-color: #888;
+            cursor: not-allowed;
+        }
+
+        /* Drawing area */
+        .canvas-container {
+            width: 100%;
+            margin-top: 25px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            overflow: hidden;
+            background-color: #ffffff;
+        }
+
+        canvas {
+            display: block;
+            width: 100%;
+            height: auto;
+        }
+
+        /* Status message */
+        #status {
+            text-align: center;
+            min-height: 24px;
+            margin-top: 15px;
+            color: #333;
+            font-weight: bold;
+        }
+
+        /* Footer */
+        footer {
+            margin-top: 40px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        /* Mobile layout */
+        @media (max-width: 600px) {
+            .navbar {
+                flex-direction: column;
+            }
+
+            .subnav-content {
+                position: static;
+                width: 100%;
+            }
+
+            .navbar a,
+            .subnavbtn {
+                display: block;
+                width: 100%;
+                text-align: left;
+                box-sizing: border-box;
+            }
+
+            main {
+                margin: 15px;
+                padding: 18px;
+            }
+
+            .controls {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Header -->
+    <header>
+        <h1>This is for COP4813</h1>
+    </header>
+
+    <!-- Navigation menu -->
+    <nav class="navbar" aria-label="Main navigation">
+
+        <a href="https://magmakingfj.github.io/COP4813/">
+            Home
+        </a>
+
+        <div class="subnav">
+            <button class="subnavbtn" type="button">
+                My Classes <i class="fa fa-caret-down"></i>
+            </button>
+
+            <div class="subnav-content">
+                <a href="https://class.daytonastate.edu/d2l/home/511809">
+                    COP 4813 - Web Systems I
+                </a>
+
+                <a href="https://class.daytonastate.edu/d2l/home/511711">
+                    CEN 4801 - Systems Integration
+                </a>
+            </div>
+        </div>
+
+        <div class="subnav">
+            <button class="subnavbtn" type="button">
+                My Assignments <i class="fa fa-caret-down"></i>
+            </button>
+
+            <div class="subnav-content">
+                <a href="https://class.daytonastate.edu/d2l/lms/dropbox/user/folder_submit_files.d2l?db=1437238&amp;grpid=0&amp;isprv=&amp;bp=0&amp;ou=511809">
+                    Assignment 1 - Hello World
+                </a>
+
+                <a href="https://class.daytonastate.edu/d2l/lms/dropbox/user/folder_submit_files.d2l?db=1437239&amp;grpid=0&amp;isprv=0&amp;bp=0&amp;ou=511809">
+                    Assignment 2 - Web Site
+                </a>
+
+                <a href="assignment3.html">
+                    Assignment 3 - Forms
+                </a>
+
+                <a href="assignment4.html">
+                    Assignment 4 - Plotting
+                </a>
+
+                <a href="Assignment5.html">
+                    Assignment 5 - Canvas
+                </a>
+
+                <a href="upcoming.html">
+                    Assignment 6 - JSON
+                </a>
+
+                <a href="upcoming.html">
+                    Assignment 7 - Drag Drop
+                </a>
+            </div>
+        </div>
+
+    </nav>
+
+    <!-- Main assignment content -->
+    <main>
+
+        <h2>Assignment 5 - HTML5 Canvas Spirograph</h2>
+
+        <p class="description">
+            Enter the radii and pen offset below, then click
+            <strong>Start Spirograph</strong> to watch the
+            drawing appear on the canvas.
+        </p>
+
+        <!-- Spirograph equations -->
+        <div class="equation">
+            <strong>Spirograph Equations</strong>
+            <br>
+            x = (R + r) cos(t) - (r + O) cos(((R + r) / r)t)
+            <br>
+            y = (R + r) sin(t) - (r + O) sin(((R + r) / r)t)
+        </div>
+
+        <!-- User inputs -->
+        <div class="controls">
+
+            <div class="input-group">
+                <label for="outerRadius">
+                    Outer Circle Radius (R)
+                </label>
+
+                <input
+                    type="number"
+                    id="outerRadius"
+                    value="120"
+                    min="1"
+                    max="250"
+                    step="1"
+                    required>
+
+                <small>
+                    Enter a value from 1 to 250.
+                </small>
+            </div>
+
+            <div class="input-group">
+                <label for="innerRadius">
+                    Inner Circle Radius (r)
+                </label>
+
+                <input
+                    type="number"
+                    id="innerRadius"
+                    value="45"
+                    min="1"
+                    max="250"
+                    step="1"
+                    required>
+
+                <small>
+                    Enter a value from 1 to 250.
+                </small>
+            </div>
+
+            <div class="input-group">
+                <label for="penOffset">
+                    Pen Offset (O)
+                </label>
+
+                <input
+                    type="number"
+                    id="penOffset"
+                    value="60"
+                    min="0"
+                    max="250"
+                    step="1"
+                    required>
+
+                <small>
+                    Enter a value from 0 to 250.
+                </small>
+            </div>
+
+        </div>
+
+        <!-- Single drawing button -->
+        <div class="button-area">
+            <button
+                type="button"
+                class="start-button"
+                id="startButton"
+                onclick="startSpirograph()">
+
+                <i class="fa fa-pencil"></i>
+                Start Spirograph
+
+            </button>
+        </div>
+
+        <!-- Canvas drawing area -->
+        <div class="canvas-container">
+            <canvas
+                id="spirographCanvas"
+                width="1000"
+                height="650"
+                aria-label="Spirograph drawing canvas">
+                Your browser does not support HTML5 Canvas.
+            </canvas>
+        </div>
+
+        <p id="status" role="status" aria-live="polite">
+            Enter your values and click Start Spirograph.
+        </p>
+
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <p>Created by Jean Fouquet</p>
+    </footer>
+
+    <!-- JavaScript for the Spirograph -->
+    <script>
+
+        /*
+         * Get the canvas and drawing context.
+         * The context allows JavaScript to draw
+         * lines and shapes on the canvas.
+         */
+
+        const canvas = document.getElementById("spirographCanvas");
+        const ctx = canvas.getContext("2d");
+
+        const startButton = document.getElementById("startButton");
+        const statusMessage = document.getElementById("status");
+
+        /*
+         * Variables used by the animation.
+         */
+
+        let animationFrame = null;
+        let currentT = 0;
+        let maxT = 0;
+        let drawingScale = 1;
+        let centerX = canvas.width / 2;
+        let centerY = canvas.height / 2;
+
+        let R = 120;
+        let r = 45;
+        let O = 60;
+
+        /*
+         * Calculate the X coordinate of the pen.
+         *
+         * x = (R+r)*cos(t) - (r+O)*cos(((R+r)/r)*t)
+         */
+
+        function calculateX(R, r, O, t) {
+            return (R + r) * Math.cos(t)
+                - (r + O) * Math.cos(((R + r) / r) * t);
+        }
+
+        /*
+         * Calculate the Y coordinate of the pen.
+         *
+         * y = (R+r)*sin(t) - (r+O)*sin(((R+r)/r)*t)
+         */
+
+        function calculateY(R, r, O, t) {
+            return (R + r) * Math.sin(t)
+                - (r + O) * Math.sin(((R + r) / r) * t);
+        }
+
+        /*
+         * Prepare the canvas for a new drawing.
+         */
+
+        function clearCanvas() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            ctx.fillStyle = "#ffffff";
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+        }
+
+        /*
+         * Start the Spirograph drawing.
+         * This function validates the user's values,
+         * clears the canvas, and starts the animation.
+         */
+
+        function startSpirograph() {
+
+            /*
+             * Stop an existing animation if the
+             * user starts another drawing.
+             */
+
+            if (animationFrame !== null) {
+                cancelAnimationFrame(animationFrame);
+                animationFrame = null;
+            }
+
+            /*
+             * Read the input values.
+             */
+
+            const outerInput = document.getElementById("outerRadius");
+            const innerInput = document.getElementById("innerRadius");
+            const offsetInput = document.getElementById("penOffset");
+
+            /*
+             * Validate that all fields contain numbers.
+             */
+
+            if (
+                outerInput.value.trim() === "" ||
+                innerInput.value.trim() === "" ||
+                offsetInput.value.trim() === ""
+            ) {
+                alert("Please enter a value for R, r, and O.");
+                return;
+            }
+
+            R = Number(outerInput.value);
+            r = Number(innerInput.value);
+            O = Number(offsetInput.value);
+
+            /*
+             * Make sure the values are finite and
+             * fall within the allowed ranges.
+             */
+
+            if (
+                !Number.isFinite(R) ||
+                !Number.isFinite(r) ||
+                !Number.isFinite(O) ||
+                R < 1 || R > 250 ||
+                r < 1 || r > 250 ||
+                O < 0 || O > 250
+            ) {
+                alert(
+                    "Invalid values. R and r must be between 1 and 250. " +
+                    "O must be between 0 and 250."
+                );
+                return;
+            }
+
+            /*
+             * Calculate the maximum possible extent
+             * of the curve so the drawing fits
+             * inside the canvas.
+             */
+
+            const extent = R + 2 * r + O;
+
+            const availableWidth = canvas.width / 2 - 25;
+            const availableHeight = canvas.height / 2 - 25;
+
+            drawingScale = Math.min(
+                availableWidth / extent,
+                availableHeight / extent
+            );
+
+            centerX = canvas.width / 2;
+            centerY = canvas.height / 2;
+
+            /*
+             * Start at t = 0.
+             *
+             * Continue to 40*pi, drawing a little
+             * at a time so the user can watch.
+             */
+
+            currentT = 0;
+            maxT = 40 * Math.PI;
+
+            /*
+             * Clear the old drawing.
+             */
+
+            clearCanvas();
+
+            /*
+             * Set the line appearance.
+             */
+
+            ctx.beginPath();
+            ctx.lineWidth = 2;
+            ctx.lineJoin = "round";
+            ctx.lineCap = "round";
+            ctx.strokeStyle = "#1769aa";
+
+            /*
+             * Move the pen to the initial point.
+             */
+
+            const startX = calculateX(R, r, O, currentT);
+            const startY = calculateY(R, r, O, currentT);
+
+            ctx.moveTo(
+                centerX + startX * drawingScale,
+                centerY - startY * drawingScale
+            );
+
+            /*
+             * Disable the button while the
+             * animation is running.
+             */
+
+            startButton.disabled = true;
+
+            statusMessage.textContent = "Drawing Spirograph...";
+
+            /*
+             * Begin drawing.
+             */
+
+            drawSpirograph();
+        }
+
+        /*
+         * Draw the Spirograph progressively.
+         *
+         * Each animation frame adds a group of
+         * short line segments to the canvas.
+         */
+
+        function drawSpirograph() {
+
+            /*
+             * Number of points drawn per frame.
+             * Increase this for faster drawing.
+             */
+
+            const pointsPerFrame = 150;
+
+            /*
+             * Small increments produce a smoother
+             * curve.
+             */
+
+            const tIncrement = 0.01;
+
+            let pointsDrawn = 0;
+
+            while (
+                currentT < maxT &&
+                pointsDrawn < pointsPerFrame
+            ) {
+
+                currentT += tIncrement;
+
+                /*
+                 * Calculate the pen's location.
+                 */
+
+                const x = calculateX(R, r, O, currentT);
+                const y = calculateY(R, r, O, currentT);
+
+                /*
+                 * Convert mathematical coordinates
+                 * into canvas coordinates.
+                 *
+                 * Canvas Y coordinates increase
+                 * downward, so Y is inverted.
+                 */
+
+                const canvasX = centerX + x * drawingScale;
+                const canvasY = centerY - y * drawingScale;
+
+                /*
+                 * Extend the existing line to
+                 * the new pen location.
+                 */
+
+                ctx.lineTo(canvasX, canvasY);
+
+                pointsDrawn++;
+            }
+
+            /*
+             * Draw the new line segments.
+             */
+
+            ctx.stroke();
+
+            /*
+             * Continue until the maximum t value
+             * is reached.
+             */
+
+            if (currentT < maxT) {
+
+                animationFrame = requestAnimationFrame(drawSpirograph);
+
+            } else {
+
+                /*
+                 * Drawing is complete.
+                 */
+
+                animationFrame = null;
+                startButton.disabled = false;
+
+                statusMessage.textContent =
+                    "Spirograph drawing complete! " +
+                    "Enter different values to create another pattern.";
+            }
+        }
+
+    </script>
+
+</body>
+</html>
