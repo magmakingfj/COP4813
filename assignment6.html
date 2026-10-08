@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Assignment 6 - JSON</title>
+
+    <!-- Load Font Awesome icons -->
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+
+<style>
+
+/* General page styling */
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+}
+
+
+/* Header */
+
+header {
+    padding: 20px;
+    background-color: white;
+}
+
+
+/* Navigation menu */
+
+.navbar {
+    display: flex;
+    background-color: #333;
+}
+
+
+/* Navigation links */
+
+.navbar a,
+.subnavbtn {
+    color: white;
+    padding: 14px 16px;
+    font-size: 16px;
+    text-decoration: none;
+}
+
+
+/* Subnavigation */
+
+.subnav {
+    position: relative;
+}
+
+
+/* Subnavigation button */
+
+.subnavbtn {
+    border: none;
+    background-color: inherit;
+    font-family: inherit;
+    cursor: pointer;
+}
+
+
+/* Hover effects */
+
+.navbar a:hover,
+.subnav:hover .subnavbtn,
+.subnav:focus-within .subnavbtn {
+    background-color: red;
+}
+
+
+/* Dropdown menu */
+
+.subnav-content {
+    display: none;
+    position: absolute;
+    left: 0;
+    top: 100%;
+    min-width: 250px;
+    background-color: red;
+    z-index: 10;
+}
+
+
+/* Dropdown links */
+
+.subnav-content a {
+    display: block;
+    padding: 12px 16px;
+}
+
+
+/* Dropdown hover */
+
+.subnav-content a:hover {
+    background-color: #eee;
+    color: black;
+}
+
+
+/* Show dropdown */
+
+.subnav:hover .subnav-content,
+.subnav:focus-within .subnav-content {
+    display: block;
+}
+
+
+/* Main content */
+
+main {
+    max-width: 1100px;
+    margin: 40px auto;
+    padding: 30px;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+}
+
+
+/* Assignment title */
+
+h2 {
+    text-align: center;
+    color: #333;
+}
+
+
+/* Description */
+
+.description {
+    text-align: center;
+    line-height: 1.6;
+    margin-bottom: 30px;
+}
+
+
+/* JSON information box */
+
+.json-info {
+    background-color: #eeeeee;
+    padding: 20px;
+    border-radius: 6px;
+    margin-bottom: 30px;
+    line-height: 1.6;
+}
+
+
+/* Button area */
+
+.button-area {
+    text-align: center;
+    margin: 25px 0;
+}
+
+
+/* Load JSON button */
+
+.load-button {
+    background-color: #333;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 14px 28px;
+    font-size: 17px;
+    cursor: pointer;
+}
+
+
+/* Button hover */
+
+.load-button:hover {
+    background-color: red;
+}
+
+
+/* Data section */
+
+#dataSection {
+    display: none;
+    margin-top: 30px;
+}
+
+
+/* Table */
+
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+
+/* Table cells */
+
+.data-table th,
+.data-table td {
+    border: 1px solid #ccc;
+    padding: 12px;
+    text-align: center;
+}
+
+
+/* Table heading */
+
+.data-table th {
+    background-color: #333;
+    color: white;
+}
+
+
+/* Alternate table rows */
+
+.data-table tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+
+/* Table hover */
+
+.data-table tr:hover {
+    background-color: #ddd;
+}
+
+
+/* Status message */
+
+#status {
+    text-align: center;
+    font-weight: bold;
+    margin-top: 20px;
+}
+
+
+/* Footer */
+
+footer {
+    margin-top: 40px;
+    padding: 20px;
+    text-align: center;
+}
+
+
+/* Mobile layout */
+
+@media (max-width: 600px) {
+
+    .navbar {
+        flex-direction: column;
+    }
+
+    .subnav-content {
+        position: static;
+        width: 100%;
+    }
+
+    .navbar a,
+    .subnavbtn {
+        display: block;
+        width: 100%;
+        text-align: left;
+        box-sizing: border-box;
+    }
+
+    main {
+        margin: 20px;
+        padding: 20px;
+    }
+
+    .data-table {
+        font-size: 14px;
+    }
+
+    .data-table th,
+    .data-table td {
+        padding: 8px;
+    }
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+    <!-- Header -->
+
+    <header>
+
+        <h1>This is for COP4813</h1>
+
+    </header>
+
+
+
+    <!-- Navigation -->
+
+    <nav class="navbar" aria-label="Main navigation">
+
+
+        <a href="https://magmakingfj.github.io/COP4813/">
+
+            Home
+
+        </a>
+
+
+
+        <!-- My Classes -->
+
+        <div class="subnav">
+
+            <button class="subnavbtn" type="button">
+
+                My Classes
+
+                <i class="fa fa-caret-down"></i>
+
+            </button>
+
+
+            <div class="subnav-content">
+
+                <a href="https://class.daytonastate.edu/d2l/home/511809">
+
+                    COP 4813 - Web Systems I
+
+                </a>
+
+
+                <a href="https://class.daytonastate.edu/d2l/home/511711">
+
+                    CEN 4801 - Systems Integration
+
+                </a>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- My Assignments -->
+
+        <div class="subnav">
+
+            <button class="subnavbtn" type="button">
+
+                My Assignments
+
+                <i class="fa fa-caret-down"></i>
+
+            </button>
+
+
+            <div class="subnav-content">
+
+
+                <a href="https://class.daytonastate.edu/d2l/lms/dropbox/user/folder_submit_files.d2l?db=1437238&amp;grpid=0&amp;isprv=&amp;bp=0&amp;ou=511809">
+
+                    Assignment 1 - Hello World
+
+                </a>
+
+
+                <a href="https://class.daytonastate.edu/d2l/lms/dropbox/user/folder_submit_files.d2l?db=1437239&amp;grpid=0&amp;isprv=0&amp;bp=0&amp;ou=511809">
+
+                    Assignment 2 - Web Site
+
+                </a>
+
+
+                <a href="assignment3.html">
+
+                    Assignment 3 - Forms
+
+                </a>
+
+
+                <a href="assignment4.html">
+
+                    Assignment 4 - Plotting
+
+                </a>
+
+
+                <a href="Assignment5.html">
+
+                    Assignment 5 - Canvas
+
+                </a>
+
+
+                <a href="Assignment6.html">
+
+                    Assignment 6 - JSON
+
+                </a>
+
+
+                <a href="upcoming.html">
+
+                    Assignment 7 - Drag Drop
+
+                </a>
+
+
+            </div>
+
+        </div>
+
+    </nav>
+
+
+
+    <!-- Main content -->
+
+    <main>
+
+
+        <h2>
+
+            Assignment 6 - JSON Data
+
+        </h2>
+
+
+
+        <p class="description">
+
+            This page demonstrates how JavaScript can read
+            JSON data from an external file and display
+            the information in a human-readable format.
+
+        </p>
+
+
+
+        <!-- Assignment information -->
+
+        <div class="json-info">
+
+            <strong>External JSON File:</strong>
+
+            assignment6.json
+
+            <br><br>
+
+            The basketball player information displayed
+            below is stored in an external JSON file.
+            JavaScript reads the file and converts the
+            JSON data into JavaScript objects.
+
+        </div>
+
+
+
+        <!-- Load JSON button -->
+
+        <div class="button-area">
+
+            <button
+                type="button"
+                class="load-button"
+                onclick="loadJSON()">
+
+                <i class="fa fa-database"></i>
+
+                Load JSON Data
+
+            </button>
+
+        </div>
+
+
+
+        <!-- Status -->
+
+        <p id="status">
+
+            Click "Load JSON Data" to display the information.
+
+        </p>
+
+
+
+        <!-- JSON data -->
+
+        <section id="dataSection">
+
+
+            <h3>
+
+                Basketball Player Statistics
+
+            </h3>
+
+
+
+            <table class="data-table">
+
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            Player Name
+                        </th>
+
+                        <th>
+                            Season
+                        </th>
+
+                        <th>
+                            Team
+                        </th>
+
+                        <th>
+                            Games Played
+                        </th>
+
+                        <th>
+                            Points
+                        </th>
+
+                        <th>
+                            Assists
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody id="playerData">
+
+                </tbody>
+
+
+            </table>
+
+
+        </section>
+
+
+    </main>
+
+
+
+    <!-- Footer -->
+
+    <footer>
+
+        <p>
+            Created by Jean Fouquet
+        </p>
+
+    </footer>
+
+
+
+    <!-- JavaScript -->
+
+    <script>
+
+
+        /*
+         * This function reads the external
+         * assignment6.json file.
+         */
+
+        function loadJSON() {
+
+
+            /*
+             * Use fetch() to retrieve the
+             * external JSON file.
+             */
+
+            fetch("assignment6.json")
+
+
+                /*
+                 * Convert the response into
+                 * JavaScript JSON data.
+                 */
+
+                .then(function(response) {
+
+
+                    /*
+                     * Check whether the file
+                     * was successfully loaded.
+                     */
+
+                    if (!response.ok) {
+
+                        throw new Error(
+                            "Unable to load the JSON file."
+                        );
+
+                    }
+
+
+                    return response.json();
+
+                })
+
+
+                /*
+                 * Work with the JSON data.
+                 */
+
+                .then(function(data) {
+
+
+                    /*
+                     * Get the table body.
+                     */
+
+                    const playerData =
+                        document.getElementById("playerData");
+
+
+                    /*
+                     * Clear any previous data.
+                     */
+
+                    playerData.innerHTML = "";
+
+
+                    /*
+                     * Loop through every player
+                     * contained in the JSON file.
+                     */
+
+                    data.players.forEach(function(player) {
+
+
+                        /*
+                         * Create a new table row.
+                         */
+
+                        const row =
+                            document.createElement("tr");
+
+
+                        /*
+                         * Create the Player Name cell.
+                         */
+
+                        const nameCell =
+                            document.createElement("td");
+
+
+                        nameCell.textContent =
+                            player.playerName;
+
+
+                        /*
+                         * Create the Season cell.
+                         */
+
+                        const seasonCell =
+                            document.createElement("td");
+
+
+                        seasonCell.textContent =
+                            player.season;
+
+
+                        /*
+                         * Create the Team cell.
+                         */
+
+                        const teamCell =
+                            document.createElement("td");
+
+
+                        teamCell.textContent =
+                            player.team;
+
+
+                        /*
+                         * Create the Games Played cell.
+                         */
+
+                        const gamesCell =
+                            document.createElement("td");
+
+
+                        gamesCell.textContent =
+                            player.gamesPlayed;
+
+
+                        /*
+                         * Create the Points cell.
+
+                         */
+
+                        const pointsCell =
+                            document.createElement("td");
+
+
+                        pointsCell.textContent =
+                            player.points;
+
+
+                        /*
+                         * Create the Assists cell.
+
+                         */
+
+                        const assistsCell =
+                            document.createElement("td");
+
+
+                        assistsCell.textContent =
+                            player.assists;
+
+
+                        /*
+                         * Add all of the cells
+                         * to the table row.
+                         */
+
+                        row.appendChild(nameCell);
+
+                        row.appendChild(seasonCell);
+
+                        row.appendChild(teamCell);
+
+                        row.appendChild(gamesCell);
+
+                        row.appendChild(pointsCell);
+
+                        row.appendChild(assistsCell);
+
+
+                        /*
+                         * Add the completed row
+                         * to the table.
+                         */
+
+                        playerData.appendChild(row);
+
+                    });
+
+
+                    /*
+                     * Display the data section.
+                     */
+
+                    document.getElementById("dataSection")
+                        .style.display = "block";
+
+
+                    /*
+                     * Update the status message.
+                     */
+
+                    document.getElementById("status")
+                        .textContent =
+                        "JSON data loaded successfully.";
+
+
+                })
+
+
+                /*
+                 * Handle errors.
+
+                 */
+
+                .catch(function(error) {
+
+
+                    document.getElementById("status")
+                        .textContent =
+                        "Error loading JSON data: "
+                        + error.message;
+
+
+                });
+
+        }
+
+
+    </script>
+
+
+</body>
+
+</html>
