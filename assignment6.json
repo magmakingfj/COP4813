@@ -1,0 +1,52 @@
+{
+    "players": [
+        {
+            "playerName": "Marcus Johnson",
+            "season": "2025-2026",
+            "team": "Orlando Knights",
+            "gamesPlayed": 82,
+            "points": 1842,
+            "assists": 421
+        },
+        {
+            "playerName": "Darius Williams",
+            "season": "2025-2026",
+            "team": "Miami Waves",
+            "gamesPlayed": 79,
+            "points": 1675,
+            "assists": 512
+        },
+        {
+            "playerName": "Jordan Davis",
+            "season": "2025-2026",
+            "team": "Tampa Sharks",
+            "gamesPlayed": 80,
+            "points": 1598,
+            "assists": 386
+        },
+        {
+            "playerName": "Anthony Carter",
+            "season": "2025-2026",
+            "team": "Jacksonville Titans",
+            "gamesPlayed": 76,
+            "points": 1432,
+            "assists": 447
+        },
+        {
+            "playerName": "Malcolm Brown",
+            "season": "2025-2026",
+            "team": "Atlanta Hawks",
+            "gamesPlayed": 81,
+            "points": 1756,
+            "assists": 398
+        },
+        {
+            "playerName": "Chris Thompson",
+            "season": "2025-2026",
+            "team": "Charlotte Flyers",
+            "gamesPlayed": 78,
+            "points": 1521,
+            "assists": 476
+        }
+    ]
+}
