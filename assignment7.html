@@ -1,0 +1,814 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Assignment 7 - Drag and Drop</title>
+
+    <!-- Load Font Awesome icons -->
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <style>
+        /* General page styling */
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+        }
+
+        /* Header */
+        header {
+            padding: 20px;
+            background-color: white;
+        }
+
+        /* Navigation menu */
+        .navbar {
+            display: flex;
+            background-color: #333;
+        }
+
+        /* Navigation links */
+        .navbar a,
+        .subnavbtn {
+            color: white;
+            padding: 14px 16px;
+            font-size: 16px;
+            text-decoration: none;
+        }
+
+        /* Subnavigation */
+        .subnav {
+            position: relative;
+        }
+
+        /* Subnavigation button */
+        .subnavbtn {
+            border: none;
+            background-color: inherit;
+            font-family: inherit;
+            cursor: pointer;
+        }
+
+        /* Hover effects */
+        .navbar a:hover,
+        .subnav:hover .subnavbtn,
+        .subnav:focus-within .subnavbtn {
+            background-color: red;
+        }
+
+        /* Dropdown menu */
+        .subnav-content {
+            display: none;
+            position: absolute;
+            left: 0;
+            top: 100%;
+            min-width: 250px;
+            background-color: red;
+            z-index: 10;
+        }
+
+        /* Dropdown links */
+        .subnav-content a {
+            display: block;
+            padding: 12px 16px;
+        }
+
+        /* Dropdown hover */
+        .subnav-content a:hover {
+            background-color: #eee;
+            color: black;
+        }
+
+        /* Show dropdown */
+        .subnav:hover .subnav-content,
+        .subnav:focus-within .subnav-content {
+            display: block;
+        }
+
+        /* Main content */
+        main {
+            max-width: 1100px;
+            margin: 35px auto;
+            padding: 30px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.12);
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+        }
+
+        .description {
+            text-align: center;
+            line-height: 1.6;
+            margin-bottom: 25px;
+        }
+
+        /* Buttons */
+        .button-area {
+            text-align: center;
+            margin: 25px 0;
+        }
+
+        .deal-button {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 5px;
+            background-color: #333;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .deal-button:hover {
+            background-color: #b22222;
+        }
+
+        /* Playing card hand */
+        .hand {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+            min-height: 180px;
+            padding: 20px 10px;
+            border: 2px dashed #ccc;
+            border-radius: 8px;
+            background-color: #fafafa;
+        }
+
+        /* Individual playing card */
+        .playing-card {
+            width: 105px;
+            height: 150px;
+            box-sizing: border-box;
+            background-color: white;
+            border: 1px solid #aaa;
+            border-radius: 9px;
+            box-shadow: 2px 3px 5px rgba(0, 0, 0, 0.18);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 8px;
+            cursor: grab;
+            user-select: none;
+            touch-action: manipulation;
+        }
+
+        .playing-card:active {
+            cursor: grabbing;
+        }
+
+        .card-top {
+            align-self: flex-start;
+            font-size: 21px;
+            font-weight: bold;
+            line-height: 1.1;
+        }
+
+        .card-suit {
+            text-align: center;
+            font-size: 43px;
+        }
+
+        .card-bottom {
+            align-self: flex-end;
+            font-size: 21px;
+            font-weight: bold;
+            line-height: 1.1;
+            transform: rotate(180deg);
+        }
+
+        .red-suit {
+            color: #d00000;
+        }
+
+        .black-suit {
+            color: #222;
+        }
+
+        /* Discard area */
+        .discard-pile {
+            min-height: 200px;
+            margin-top: 30px;
+            padding: 20px;
+            border: 3px dashed #888;
+            border-radius: 10px;
+            background-color: #edf2ed;
+            text-align: center;
+            transition: background-color 0.2s, border-color 0.2s;
+        }
+
+        .discard-pile h3 {
+            margin-top: 0;
+        }
+
+        .discard-pile.drag-over {
+            background-color: #d7f5d7;
+            border-color: #218838;
+        }
+
+        .discard-pile.invalid-drop {
+            background-color: #ffe3e3;
+            border-color: #b22222;
+        }
+
+        .discarded-cards {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 12px;
+            margin-top: 15px;
+        }
+
+        .discarded-cards .playing-card {
+            width: 75px;
+            height: 108px;
+            padding: 5px;
+            cursor: default;
+        }
+
+        .discarded-cards .card-top,
+        .discarded-cards .card-bottom {
+            font-size: 15px;
+        }
+
+        .discarded-cards .card-suit {
+            font-size: 30px;
+        }
+
+        /* Status message */
+        #status {
+            min-height: 28px;
+            margin-top: 20px;
+            padding: 12px;
+            border-radius: 5px;
+            background-color: #eee;
+            text-align: center;
+            font-weight: bold;
+            line-height: 1.5;
+        }
+
+        .success {
+            color: #176b2c;
+        }
+
+        .error {
+            color: #a00000;
+        }
+
+        /* Footer */
+        footer {
+            margin-top: 40px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        /* Mobile layout */
+        @media (max-width: 600px) {
+            .navbar {
+                flex-direction: column;
+            }
+
+            .subnav-content {
+                position: static;
+                width: 100%;
+            }
+
+            .navbar a,
+            .subnavbtn {
+                display: block;
+                width: 100%;
+                text-align: left;
+                box-sizing: border-box;
+            }
+
+            main {
+                margin: 15px;
+                padding: 18px;
+            }
+
+            .playing-card {
+                width: 85px;
+                height: 125px;
+            }
+
+            .card-suit {
+                font-size: 35px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Header -->
+    <header>
+        <h1>This is for COP4813</h1>
+    </header>
+
+    <!-- Navigation menu -->
+    <nav class="navbar" aria-label="Main navigation">
+
+        <a href="https://magmakingfj.github.io/COP4813/">
+            Home
+        </a>
+
+        <div class="subnav">
+            <button class="subnavbtn" type="button">
+                My Classes <i class="fa fa-caret-down"></i>
+            </button>
+
+            <div class="subnav-content">
+                <a href="https://class.daytonastate.edu/d2l/home/511809">
+                    COP 4813 - Web Systems I
+                </a>
+
+                <a href="https://class.daytonastate.edu/d2l/home/511711">
+                    CEN 4801 - Systems Integration
+                </a>
+            </div>
+        </div>
+
+        <div class="subnav">
+            <button class="subnavbtn" type="button">
+                My Assignments <i class="fa fa-caret-down"></i>
+            </button>
+
+            <div class="subnav-content">
+                <a href="https://class.daytonastate.edu/d2l/lms/dropbox/user/folder_submit_files.d2l?db=1437238&amp;grpid=0&amp;isprv=&amp;bp=0&amp;ou=511809">
+                    Assignment 1 - Hello World
+                </a>
+
+                <a href="https://class.daytonastate.edu/d2l/lms/dropbox/user/folder_submit_files.d2l?db=1437239&amp;grpid=0&amp;isprv=0&amp;bp=0&amp;ou=511809">
+                    Assignment 2 - Web Site
+                </a>
+
+                <a href="assignment3.html">
+                    Assignment 3 - Forms
+                </a>
+
+                <a href="assignment4.html">
+                    Assignment 4 - Plotting
+                </a>
+
+                <a href="Assignment5.html">
+                    Assignment 5 - Canvas
+                </a>
+
+                <a href="Assignment6.html">
+                    Assignment 6 - JSON
+                </a>
+
+                <a href="Assignment7.html">
+                    Assignment 7 - Drag Drop
+                </a>
+            </div>
+        </div>
+
+    </nav>
+
+    <!-- Main assignment content -->
+    <main>
+
+        <h2>Assignment 7 - JavaScript Drag and Drop</h2>
+
+        <p class="description">
+            Click <strong>Deal Cards</strong> to receive five playing cards.
+            Drag any card from your hand into the clearly marked
+            <strong>Discard Pile</strong>. When a card is discarded,
+            a confirmation message will appear and a replacement card
+            will be dealt automatically.
+        </p>
+
+        <!-- Deal cards button -->
+        <div class="button-area">
+            <button
+                type="button"
+                class="deal-button"
+                id="dealButton"
+                onclick="dealCards()">
+
+                <i class="fa fa-clone"></i>
+                Deal Cards
+
+            </button>
+        </div>
+
+        <!-- Player's hand -->
+        <section aria-labelledby="handHeading">
+
+            <h3 id="handHeading">Your Hand</h3>
+
+            <div
+                class="hand"
+                id="hand"
+                aria-label="Your playing cards">
+
+                <p>Click Deal Cards to start.</p>
+
+            </div>
+
+        </section>
+
+        <!-- Discard pile drop target -->
+        <section
+            class="discard-pile"
+            id="discardPile"
+            aria-label="Discard pile drop target">
+
+            <h3>
+                <i class="fa fa-trash"></i>
+                Discard Pile
+            </h3>
+
+            <p>
+                Drag a playing card here to discard it.
+            </p>
+
+            <div
+                class="discarded-cards"
+                id="discardedCards">
+
+            </div>
+
+        </section>
+
+        <!-- Event feedback -->
+        <p id="status" role="status" aria-live="polite">
+            Ready to play. Click Deal Cards to begin.
+        </p>
+
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <p>Created by Jean Fouquet</p>
+    </footer>
+
+    <!-- JavaScript drag-and-drop functionality -->
+    <script>
+
+        /*
+         * Create a standard 52-card deck.
+         * Each card has a rank, suit, symbol, and unique ID.
+         */
+
+        const suits = [
+            { name: "Spades", symbol: "♠", color: "black-suit" },
+            { name: "Hearts", symbol: "♥", color: "red-suit" },
+            { name: "Diamonds", symbol: "♦", color: "red-suit" },
+            { name: "Clubs", symbol: "♣", color: "black-suit" }
+        ];
+
+        const ranks = [
+            { name: "A", value: 1 },
+            { name: "2", value: 2 },
+            { name: "3", value: 3 },
+            { name: "4", value: 4 },
+            { name: "5", value: 5 },
+            { name: "6", value: 6 },
+            { name: "7", value: 7 },
+            { name: "8", value: 8 },
+            { name: "9", value: 9 },
+            { name: "10", value: 10 },
+            { name: "J", value: 11 },
+            { name: "Q", value: 12 },
+            { name: "K", value: 13 }
+        ];
+
+        let deck = [];
+        let hand = [];
+        let discarded = [];
+        let draggedCardId = null;
+
+        const handElement = document.getElementById("hand");
+        const discardPile = document.getElementById("discardPile");
+        const discardedCardsElement =
+            document.getElementById("discardedCards");
+        const statusElement = document.getElementById("status");
+
+        /*
+         * Build all 52 unique cards.
+         */
+
+        function createDeck() {
+            const newDeck = [];
+
+            suits.forEach(function (suit) {
+                ranks.forEach(function (rank) {
+                    newDeck.push({
+                        id: suit.name + "-" + rank.name,
+                        rank: rank.name,
+                        suit: suit.name,
+                        symbol: suit.symbol,
+                        color: suit.color
+                    });
+                });
+            });
+
+            return newDeck;
+        }
+
+        /*
+         * Shuffle the deck using Fisher-Yates.
+         */
+
+        function shuffleDeck(cards) {
+            for (let i = cards.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+
+                const temp = cards[i];
+                cards[i] = cards[j];
+                cards[j] = temp;
+            }
+
+            return cards;
+        }
+
+        /*
+         * Show an event message so the user and
+         * instructor can see that an action occurred.
+         */
+
+        function showStatus(message, type) {
+            statusElement.textContent = message;
+            statusElement.className = type || "";
+        }
+
+        /*
+         * Create the visual HTML for one playing card.
+         */
+
+        function createCardElement(card, isDraggable) {
+            const cardElement = document.createElement("div");
+
+            cardElement.className =
+                "playing-card " + card.color;
+
+            cardElement.dataset.cardId = card.id;
+
+            cardElement.innerHTML = `
+                <div class="card-top">
+                    ${card.rank}<br>${card.symbol}
+                </div>
+
+                <div class="card-suit">
+                    ${card.symbol}
+                </div>
+
+                <div class="card-bottom">
+                    ${card.rank}<br>${card.symbol}
+                </div>
+            `;
+
+            if (isDraggable) {
+                cardElement.draggable = true;
+                cardElement.tabIndex = 0;
+                cardElement.setAttribute(
+                    "aria-label",
+                    card.rank + " of " + card.suit + ", draggable card"
+                );
+
+                cardElement.addEventListener(
+                    "dragstart",
+                    handleDragStart
+                );
+
+                cardElement.addEventListener(
+                    "dragend",
+                    handleDragEnd
+                );
+            } else {
+                cardElement.setAttribute(
+                    "aria-label",
+                    card.rank + " of " + card.suit + ", discarded"
+                );
+            }
+
+            return cardElement;
+        }
+
+        /*
+         * Deal five cards from a freshly shuffled deck.
+         * A card cannot appear twice because each card
+         * is removed from the deck when dealt.
+         */
+
+        function dealCards() {
+            deck = shuffleDeck(createDeck());
+            hand = [];
+            discarded = [];
+            draggedCardId = null;
+
+            for (let i = 0; i < 5; i++) {
+                hand.push(deck.pop());
+            }
+
+            renderHand();
+            renderDiscardPile();
+
+            showStatus(
+                "Five cards dealt successfully. Drag a card to the Discard Pile.",
+                "success"
+            );
+        }
+
+        /*
+         * Render all cards currently in the player's hand.
+         */
+
+        function renderHand() {
+            handElement.innerHTML = "";
+
+            if (hand.length === 0) {
+                const message = document.createElement("p");
+                message.textContent =
+                    "Your hand is empty. Click Deal Cards to start again.";
+                handElement.appendChild(message);
+                return;
+            }
+
+            hand.forEach(function (card) {
+                handElement.appendChild(
+                    createCardElement(card, true)
+                );
+            });
+        }
+
+        /*
+         * Render the cards that have been discarded.
+         */
+
+        function renderDiscardPile() {
+            discardedCardsElement.innerHTML = "";
+
+            discarded.forEach(function (card) {
+                discardedCardsElement.appendChild(
+                    createCardElement(card, false)
+                );
+            });
+        }
+
+        /*
+         * Triggered when the user starts dragging a card.
+         */
+
+        function handleDragStart(event) {
+            draggedCardId = event.currentTarget.dataset.cardId;
+
+            event.dataTransfer.setData(
+                "text/plain",
+                draggedCardId
+            );
+
+            event.dataTransfer.effectAllowed = "move";
+
+            event.currentTarget.style.opacity = "0.5";
+
+            showStatus(
+                "Dragging " + draggedCardId.replace("-", " of ") +
+                ". Drop it into the Discard Pile.",
+                ""
+            );
+        }
+
+        /*
+         * Restore the card's appearance after dragging.
+         */
+
+        function handleDragEnd(event) {
+            event.currentTarget.style.opacity = "1";
+            discardPile.classList.remove("drag-over");
+        }
+
+        /*
+         * Allow a dragged card to be dropped into the pile.
+         * preventDefault() is necessary for the drop event
+         * to work with native HTML5 drag-and-drop.
+         */
+
+        discardPile.addEventListener("dragover", function (event) {
+            event.preventDefault();
+
+            event.dataTransfer.dropEffect = "move";
+
+            discardPile.classList.add("drag-over");
+        });
+
+        /*
+         * Remove the visual highlight when the dragged
+         * card leaves the drop target.
+         */
+
+        discardPile.addEventListener("dragleave", function (event) {
+            if (!discardPile.contains(event.relatedTarget)) {
+                discardPile.classList.remove("drag-over");
+            }
+        });
+
+        /*
+         * This is the main drop event.
+         * It discards the selected card, displays it in
+         * the pile, and deals a replacement if available.
+         */
+
+        discardPile.addEventListener("drop", function (event) {
+            event.preventDefault();
+
+            discardPile.classList.remove("drag-over");
+
+            const cardId =
+                event.dataTransfer.getData("text/plain") ||
+                draggedCardId;
+
+            if (!cardId) {
+                showStatus(
+                    "No card was selected. Drag a card from your hand.",
+                    "error"
+                );
+                return;
+            }
+
+            const cardIndex = hand.findIndex(function (card) {
+                return card.id === cardId;
+            });
+
+            /*
+             * Reject cards that are not in the player's hand.
+             */
+
+            if (cardIndex === -1) {
+                showStatus(
+                    "That card is no longer in your hand. Deal again to start a new hand.",
+                    "error"
+                );
+                return;
+            }
+
+            /*
+             * Remove the selected card from the hand.
+             */
+
+            const discardedCard = hand.splice(cardIndex, 1)[0];
+
+            /*
+             * Add the card to the discard pile.
+             */
+
+            discarded.push(discardedCard);
+
+            /*
+             * Deal one replacement card if the deck has cards.
+             * The replacement comes from the remaining deck,
+             * so no duplicate cards are dealt.
+             */
+
+            let replacementMessage = "";
+
+            if (deck.length > 0) {
+                const replacementCard = deck.pop();
+                hand.push(replacementCard);
+
+                replacementMessage =
+                    " A replacement card was dealt.";
+            } else {
+                replacementMessage =
+                    " The deck is empty; no replacement is available.";
+            }
+
+            /*
+             * Update the visible hand and discard pile.
+             */
+
+            renderHand();
+            renderDiscardPile();
+
+            /*
+             * Make the successful drop obvious.
+             * This satisfies the assignment's requirement
+             * to trigger an event and show that it happened.
+             */
+
+            showStatus(
+                "DISCARD EVENT TRIGGERED: " +
+                discardedCard.rank + " of " +
+                discardedCard.suit + " was discarded." +
+                replacementMessage,
+                "success"
+            );
+
+            draggedCardId = null;
+        });
+
+    </script>
+
+</body>
+</html>
