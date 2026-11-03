@@ -1,0 +1,324 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Assignment 10 - Report Recording</title>
+
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+        }
+
+        /* Header */
+        header {
+            padding: 20px;
+            background-color: white;
+        }
+
+        /* Navigation */
+        .navbar {
+            display: flex;
+            background-color: #333;
+            align-items: stretch;
+        }
+
+        .navbar a,
+        .subnavbtn {
+            color: white;
+            padding: 14px 16px;
+            font-size: 16px;
+            text-decoration: none;
+            border: none;
+            background-color: inherit;
+            font-family: inherit;
+            cursor: pointer;
+            display: block;
+        }
+
+        .navbar a:hover,
+        .subnavbtn:hover,
+        .subnavbtn[aria-expanded="true"] {
+            background-color: red;
+        }
+
+        /* Dropdown menus */
+        .subnav {
+            position: relative;
+        }
+
+        .subnav-content {
+            display: none;
+            position: absolute;
+            left: 0;
+            top: 100%;
+            min-width: 250px;
+            background-color: red;
+            z-index: 10;
+        }
+
+        .subnav.open .subnav-content {
+            display: block;
+        }
+
+        .subnav-content a {
+            display: block;
+            padding: 12px 16px;
+        }
+
+        .subnav-content a:hover {
+            background-color: #eee;
+            color: black;
+        }
+
+        /* Main content */
+        main {
+            max-width: 1000px;
+            margin: 30px auto;
+            padding: 25px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        h2 {
+            color: #333;
+            text-align: center;
+        }
+
+        .description {
+            text-align: center;
+            line-height: 1.6;
+            margin-bottom: 25px;
+        }
+
+        /* Responsive video */
+        .video-container {
+            width: 100%;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        video {
+            display: block;
+            width: 100%;
+            height: auto;
+            border-radius: 6px;
+            background-color: black;
+        }
+
+        .video-caption {
+            text-align: center;
+            color: #555;
+            margin-top: 12px;
+            font-size: 14px;
+        }
+
+        /* Footer */
+        footer {
+            margin-top: 40px;
+            padding: 20px;
+            background-color: #333;
+            color: white;
+            text-align: center;
+        }
+
+        a:focus-visible,
+        button:focus-visible {
+            outline: 3px solid #ffcc00;
+            outline-offset: 3px;
+        }
+
+        /* Mobile layout */
+        @media (max-width: 600px) {
+            .navbar {
+                flex-direction: column;
+            }
+
+            .navbar a,
+            .subnavbtn {
+                width: 100%;
+                text-align: left;
+            }
+
+            .subnav-content {
+                position: static;
+                width: 100%;
+                background-color: #555;
+            }
+
+            .subnav-content a {
+                padding-left: 30px;
+            }
+
+            main {
+                margin: 12px;
+                padding: 15px;
+            }
+
+            header {
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <h1>This is for COP4813</h1>
+    </header>
+
+    <!-- Navigation Menu -->
+    <nav class="navbar" aria-label="Main navigation">
+
+        <a href="https://magmakingfj.github.io/COP4813/">
+            <i class="fa fa-home" aria-hidden="true"></i> Home
+        </a>
+
+        <!-- Classes Dropdown -->
+        <div class="subnav">
+            <button class="subnavbtn"
+                    type="button"
+                    aria-expanded="false"
+                    aria-controls="classes-menu">
+                My Classes <i class="fa fa-caret-down"></i>
+            </button>
+
+            <div class="subnav-content" id="classes-menu">
+                <a href="https://class.daytonastate.edu/d2l/home/511809">
+                    COP 4813 - Web Systems I
+                </a>
+
+                <a href="https://class.daytonastate.edu/d2l/home/511711">
+                    CEN 4801 - Systems Integration
+                </a>
+            </div>
+        </div>
+
+        <!-- Assignments Dropdown -->
+        <div class="subnav">
+            <button class="subnavbtn"
+                    type="button"
+                    aria-expanded="false"
+                    aria-controls="assignments-menu">
+                My Assignments <i class="fa fa-caret-down"></i>
+            </button>
+
+            <div class="subnav-content" id="assignments-menu">
+                <a href="assignment3.html">Assignment 3 - Forms</a>
+                <a href="assignment4.html">Assignment 4 - Plotting</a>
+                <a href="Assignment5.html">Assignment 5 - Canvas</a>
+                <a href="Assignment6.html">Assignment 6 - JSON</a>
+                <a href="Assignment7.html">Assignment 7 - Drag Drop</a>
+                <a href="Assignment9.html">Assignment 9 - Animation</a>
+                <a href="assignment10.html">Assignment 10 - Report Recording</a>
+            </div>
+        </div>
+
+    </nav>
+
+    <!-- Page Content -->
+    <main>
+
+        <h2>Assignment 10 - Report Recording</h2>
+
+        <div class="description">
+            <p>
+                Welcome to my report presentation. The video below
+                contains my recorded report for this assignment.
+            </p>
+        </div>
+
+        <div class="video-container">
+
+            <video controls preload="metadata">
+                <source src="Report%20recording.mp4" type="video/mp4">
+
+                Your browser does not support HTML5 video.
+                Please use a modern browser to view this recording.
+            </video>
+
+            <p class="video-caption">
+                Report Recording - COP4813
+            </p>
+
+        </div>
+
+    </main>
+
+    <footer>
+        <p>Created by Jean Fouquet</p>
+    </footer>
+
+    <!-- Dropdown JavaScript -->
+    <script>
+        const dropdowns = document.querySelectorAll(".subnav");
+
+        dropdowns.forEach(function(dropdown) {
+
+            const button = dropdown.querySelector(".subnavbtn");
+
+            button.addEventListener("click", function() {
+
+                const isOpen = dropdown.classList.contains("open");
+
+                dropdowns.forEach(function(item) {
+                    item.classList.remove("open");
+
+                    item.querySelector(".subnavbtn")
+                        .setAttribute("aria-expanded", "false");
+                });
+
+                if (!isOpen) {
+                    dropdown.classList.add("open");
+                    button.setAttribute("aria-expanded", "true");
+                }
+
+            });
+
+        });
+
+        // Close dropdowns when clicking outside.
+        document.addEventListener("click", function(event) {
+
+            if (!event.target.closest(".navbar")) {
+                dropdowns.forEach(function(dropdown) {
+                    dropdown.classList.remove("open");
+
+                    dropdown.querySelector(".subnavbtn")
+                        .setAttribute("aria-expanded", "false");
+                });
+            }
+
+        });
+
+        // Close dropdowns using Escape.
+        document.addEventListener("keydown", function(event) {
+
+            if (event.key === "Escape") {
+                dropdowns.forEach(function(dropdown) {
+                    dropdown.classList.remove("open");
+
+                    dropdown.querySelector(".subnavbtn")
+                        .setAttribute("aria-expanded", "false");
+                });
+            }
+
+        });
+    </script>
+
+</body>
+</html>
