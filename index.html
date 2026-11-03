@@ -1,190 +1,288 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Page Title</title>
-      <!-- Load font awesome icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
+    <title>COP4813 - Home</title>
 
-<style>
-/* General page styling */
-body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-}
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
-/* Header */
-header {
-    padding: 20px;
-}
+    <style>
+        /* General page styling */
+        * {
+            box-sizing: border-box;
+        }
 
-/* Navigation menu */
-.navbar {
-    display: flex;
-    background-color: #333;
-}
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+        }
 
-/* Navigation links */
-.navbar a,
-.subnavbtn {
-    color: white;
-    padding: 14px 16px;
-    font-size: 16px;
-    text-decoration: none;
-}
+        /* Header */
+        header {
+            padding: 20px;
+            background-color: white;
+        }
 
-/* Subnavigation */
-.subnav {
-    position: relative;
-}
+        header h1 {
+            margin: 0;
+            font-size: 30px;
+        }
 
-/* Subnavigation button */
-.subnavbtn {
-    border: none;
-    background-color: inherit;
-    font-family: inherit;
-    cursor: pointer;
-}
+        /* Navigation menu */
+        .navbar {
+            display: flex;
+            align-items: stretch;
+            background-color: #333;
+        }
 
-/* Hover effects */
-.navbar a:hover,
-.subnav:hover .subnavbtn,
-.subnav:focus-within .subnavbtn {
-    background-color: red;
-}
+        /* Navigation links and dropdown buttons */
+        .navbar a,
+        .subnavbtn {
+            color: white;
+            padding: 14px 16px;
+            font-size: 16px;
+            text-decoration: none;
+            border: none;
+            background-color: inherit;
+            font-family: inherit;
+            cursor: pointer;
+            display: block;
+        }
 
-/* Dropdown menu */
-.subnav-content {
-    display: none;
-    position: absolute;
-    left: 0;
-    top: 100%;
-    min-width: 250px;
-    background-color: red;
-    z-index: 10;
-}
+        .navbar a:hover,
+        .subnavbtn:hover,
+        .subnavbtn[aria-expanded="true"] {
+            background-color: red;
+        }
 
-/* Dropdown links */
-.subnav-content a {
-    display: block;
-    padding: 12px 16px;
-}
+        /* Dropdown container */
+        .subnav {
+            position: relative;
+        }
 
-/* Dropdown hover */
-.subnav-content a:hover {
-    background-color: #eee;
-    color: black;
-}
+        /* Dropdown menu */
+        .subnav-content {
+            display: none;
+            position: absolute;
+            left: 0;
+            top: 100%;
+            min-width: 250px;
+            background-color: red;
+            z-index: 10;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
 
-/* Show dropdown */
-.subnav:hover .subnav-content,
-.subnav:focus-within .subnav-content {
-    display: block;
-}
+        /* Show dropdown when activated */
+        .subnav.open .subnav-content {
+            display: block;
+        }
 
-/* Footer */
-footer {
-    margin-top: 40px;
-    padding: 20px;
-}
+        /* Dropdown links */
+        .subnav-content a {
+            display: block;
+            padding: 12px 16px;
+            color: white;
+        }
 
-/* Mobile layout */
-@media (max-width: 600px) {
-    .navbar {
-        flex-direction: column;
-    }
+        .subnav-content a:hover {
+            background-color: #eee;
+            color: black;
+        }
 
-    .subnav-content {
-        position: static;
-        width: 100%;
-    }
+        /* Main content */
+        main {
+            padding: 25px;
+            min-height: 300px;
+            text-align: center;
+        }
 
-    .navbar a,
-    .subnavbtn {
-        display: block;
-        width: 100%;
-        text-align: left;
-        box-sizing: border-box;
-    }
-}
+        /* Responsive homepage image */
+        .home-image {
+            display: block;
+            width: 500px;
+            max-width: 100%;
+            height: auto;
+            margin: 20px auto;
+            border-radius: 5px;
+        }
 
-</style>
+        /* Footer */
+        footer {
+            margin-top: 40px;
+            padding: 20px;
+            text-align: center;
+            background-color: #333;
+            color: white;
+        }
 
-    
+        /* Keyboard focus visibility */
+        a:focus-visible,
+        button:focus-visible {
+            outline: 3px solid #ffcc00;
+            outline-offset: 3px;
+        }
+
+        /* Mobile layout */
+        @media (max-width: 600px) {
+
+            header {
+                padding: 18px 12px;
+                text-align: center;
+            }
+
+            header h1 {
+                font-size: 24px;
+            }
+
+            .navbar {
+                flex-direction: column;
+                width: 100%;
+            }
+
+            .navbar a,
+            .subnavbtn {
+                display: block;
+                width: 100%;
+                text-align: left;
+                padding: 15px;
+            }
+
+            .subnav-content {
+                position: static;
+                width: 100%;
+                min-width: 0;
+                box-shadow: none;
+                background-color: #555;
+            }
+
+            .subnav-content a {
+                padding: 14px 30px;
+            }
+
+            main {
+                padding: 15px;
+            }
+
+            .home-image {
+                width: 100%;
+                max-width: 500px;
+                height: auto;
+            }
+
+            footer {
+                margin-top: 20px;
+            }
+        }
+    </style>
 </head>
-        
+
 <body>
 
     <header>
         <h1>This is for COP4813</h1>
-        
     </header>
 
+    <!-- Main Navigation -->
     <nav class="navbar" aria-label="Main navigation">
-        <a href="https://magmakingfj.github.io/COP4813/">Home</a>
 
+        <a href="https://magmakingfj.github.io/COP4813/">
+            <i class="fa fa-home" aria-hidden="true"></i> Home
+        </a>
+
+        <!-- Classes Dropdown -->
         <div class="subnav">
-            <button class="subnavbtn">
-                My Classes <i class="fa fa-caret-down"></i>
+            <button class="subnavbtn"
+                    type="button"
+                    aria-expanded="false"
+                    aria-controls="classes-menu">
+                My Classes
+                <i class="fa fa-caret-down" aria-hidden="true"></i>
             </button>
 
-            <div class="subnav-content">
+            <div class="subnav-content" id="classes-menu">
                 <a href="https://class.daytonastate.edu/d2l/home/511809">
                     COP 4813 - Web Systems I
                 </a>
+
                 <a href="https://class.daytonastate.edu/d2l/home/511711">
                     CEN 4801 - Systems Integration
                 </a>
             </div>
         </div>
 
+        <!-- Assignments Dropdown -->
         <div class="subnav">
-            <button class="subnavbtn">
-                My Assignments <i class="fa fa-caret-down"></i>
+            <button class="subnavbtn"
+                    type="button"
+                    aria-expanded="false"
+                    aria-controls="assignments-menu">
+                My Assignments
+                <i class="fa fa-caret-down" aria-hidden="true"></i>
             </button>
 
-            <div class="subnav-content">
+            <div class="subnav-content" id="assignments-menu">
+
                 <a href="https://class.daytonastate.edu/d2l/lms/dropbox/user/folder_submit_files.d2l?db=1437238&grpid=0&isprv=&bp=0&ou=511809">
                     Assignment 1 - Hello World
                 </a>
+
                 <a href="https://class.daytonastate.edu/d2l/lms/dropbox/user/folder_submit_files.d2l?db=1437239&grpid=0&isprv=0&bp=0&ou=511809">
                     Assignment 2 - Website
                 </a>
+
                 <a href="assignment3.html">
                     Assignment 3 - Forms
                 </a>
+
                 <a href="assignment4.html">
                     Assignment 4 - Plotting
                 </a>
-                <a href="assignment5.html">
+
+                <a href="Assignment5.html">
                     Assignment 5 - Canvas
                 </a>
-                <a href="assignment6.html">
+
+                <a href="Assignment6.html">
                     Assignment 6 - JSON
                 </a>
-                <a href="assignment7.html">
+
+                <a href="Assignment7.html">
                     Assignment 7 - Drag Drop
                 </a>
+
                 <a href="upcoming.html">
                     Assignment 8 - Project
                 </a>
-                <a href="assignment9.html">
+
+                <a href="Assignment9.html">
                     Assignment 9 - Animation
                 </a>
+
                 <a href="upcoming.html">
-                    Assignment 10 - 
+                    Assignment 10
                 </a>
+
             </div>
         </div>
+
     </nav>
 
+    <!-- Homepage Content -->
     <main>
-        <!-- Page content can go here -->
-    <br>
-    <br>
-        <img src="ginwoo.jpg" alt="JinWoo From Solo Leveling Anime" Width="500" Height="400">
+
+        <img
+            src="ginwoo.jpg"
+            alt="JinWoo from Solo Leveling anime"
+            class="home-image"
+            width="500"
+            height="400"
+        >
 
     </main>
 
@@ -192,8 +290,74 @@ footer {
         <p>Created by Jean Fouquet</p>
     </footer>
 
-</body>
-</html>
+    <!-- Dropdown Menu JavaScript -->
+    <script>
+
+        const dropdowns = document.querySelectorAll(".subnav");
+
+        // Open and close dropdown menus when clicked or tapped.
+        dropdowns.forEach(function(dropdown) {
+
+            const button = dropdown.querySelector(".subnavbtn");
+
+            button.addEventListener("click", function() {
+
+                const isCurrentlyOpen =
+                    dropdown.classList.contains("open");
+
+                // Close all dropdowns first.
+                dropdowns.forEach(function(item) {
+                    item.classList.remove("open");
+
+                    const itemButton =
+                        item.querySelector(".subnavbtn");
+
+                    itemButton.setAttribute("aria-expanded", "false");
+                });
+
+                // Open the selected dropdown if it was previously closed.
+                if (!isCurrentlyOpen) {
+                    dropdown.classList.add("open");
+                    button.setAttribute("aria-expanded", "true");
+                }
+
+            });
+
+        });
+
+        // Close dropdowns when clicking outside the navigation.
+        document.addEventListener("click", function(event) {
+
+            if (!event.target.closest(".navbar")) {
+
+                dropdowns.forEach(function(dropdown) {
+                    dropdown.classList.remove("open");
+
+                    dropdown.querySelector(".subnavbtn")
+                        .setAttribute("aria-expanded", "false");
+                });
+
+            }
+
+        });
+
+        // Close dropdowns when pressing the Escape key.
+        document.addEventListener("keydown", function(event) {
+
+            if (event.key === "Escape") {
+
+                dropdowns.forEach(function(dropdown) {
+                    dropdown.classList.remove("open");
+
+                    dropdown.querySelector(".subnavbtn")
+                        .setAttribute("aria-expanded", "false");
+                });
+
+            }
+
+        });
+
+    </script>
 
 </body>
 </html>
