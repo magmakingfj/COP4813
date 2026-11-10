@@ -1,0 +1,859 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assignment 11 - BSIT Class Advisor</title>
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <style>
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f4f4;
+            color: #222;
+        }
+        header { padding: 20px; background: white; }
+        header h1 { margin: 0; font-size: 30px; }
+        .navbar {
+            display: flex;
+            align-items: stretch;
+            background: #333;
+        }
+        .navbar a, .subnavbtn {
+            color: white;
+            padding: 14px 16px;
+            font-size: 16px;
+            text-decoration: none;
+            border: 0;
+            background: inherit;
+            font-family: inherit;
+            cursor: pointer;
+            display: block;
+        }
+        .navbar a:hover, .subnavbtn:hover,
+        .subnavbtn[aria-expanded="true"] { background: red; }
+        .subnav { position: relative; }
+        .subnav-content {
+            display: none;
+            position: absolute;
+            left: 0;
+            top: 100%;
+            min-width: 250px;
+            background: red;
+            z-index: 10;
+            box-shadow: 0 4px 8px rgba(0,0,0,.2);
+        }
+        .subnav.open .subnav-content { display: block; }
+        .subnav-content a { display: block; padding: 12px 16px; color: white; }
+        .subnav-content a:hover { background: #eee; color: black; }
+
+        main {
+            width: min(1200px, 96%);
+            margin: 24px auto;
+            padding: 24px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,.08);
+        }
+        h2 { margin-top: 0; }
+        .intro { line-height: 1.6; }
+        .notice {
+            background: #fff8e8;
+            border-left: 4px solid #d99a25;
+            padding: 12px 15px;
+            margin: 18px 0;
+            line-height: 1.5;
+        }
+        .toolbar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+            margin: 18px 0;
+        }
+        button, select, input { font: inherit; }
+        .action-button {
+            border: 0;
+            border-radius: 5px;
+            padding: 10px 15px;
+            color: white;
+            background: #333;
+            cursor: pointer;
+        }
+        .action-button:hover { background: #b22222; }
+        .action-button.secondary { background: #666; }
+        .action-button:disabled { opacity: .45; cursor: not-allowed; }
+        .summary {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(120px, 1fr));
+            gap: 12px;
+            margin: 18px 0;
+        }
+        .summary-card {
+            padding: 14px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            background: #fafafa;
+            text-align: center;
+        }
+        .summary-card strong {
+            display: block;
+            font-size: 24px;
+            margin-bottom: 4px;
+        }
+        .section-title {
+            margin: 28px 0 12px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #ddd;
+        }
+        .course-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 12px;
+        }
+        .course-card {
+            border: 1px solid #d7d7d7;
+            border-radius: 7px;
+            padding: 14px;
+            background: #fff;
+            text-align: left;
+        }
+        .course-card.completed { border-left: 5px solid #238636; }
+        .course-card.available { border-left: 5px solid #2675bd; }
+        .course-card.locked { border-left: 5px solid #aaa; background: #fafafa; }
+        .course-heading {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 10px;
+        }
+        .course-code { font-weight: bold; font-size: 17px; }
+        .course-name { margin: 5px 0 10px; }
+        .credits { color: #555; white-space: nowrap; font-size: 13px; }
+        .status {
+            display: inline-block;
+            border-radius: 12px;
+            padding: 4px 9px;
+            font-size: 12px;
+            background: #eee;
+            margin: 2px 0 8px;
+        }
+        .status.good { background: #e5f5e9; color: #176b2c; }
+        .status.wait { background: #fff1d6; color: #79520b; }
+        .status.done { background: #e5f5e9; color: #176b2c; }
+        .course-meta { color: #555; font-size: 13px; line-height: 1.45; }
+        .course-actions {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 8px;
+            margin-top: 10px;
+        }
+        .course-actions label { font-size: 14px; }
+        .course-actions select {
+            max-width: 100%;
+            padding: 7px;
+            border: 1px solid #aaa;
+            border-radius: 4px;
+        }
+        .planner-wrap { overflow-x: auto; }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 650px;
+        }
+        th, td {
+            border: 1px solid #ccc;
+            padding: 10px;
+            text-align: left;
+            vertical-align: top;
+        }
+        th { background: #333; color: white; }
+        tbody tr:nth-child(even) { background: #f8f8f8; }
+        .term-hours { font-weight: bold; background: #eef4fa; }
+        .empty { color: #777; font-style: italic; }
+        .term-drop-zone { min-height: 54px; }
+        .term-drop-zone.drag-over { background: #e8f3ff; outline: 2px dashed #2675bd; }
+        .course-card[draggable="true"] { cursor: grab; }
+        .course-card.dragging { opacity: .45; }
+        .help-text { color: #555; font-size: 13px; line-height: 1.5; }
+        #message {
+            min-height: 24px;
+            margin: 12px 0;
+            font-weight: bold;
+        }
+        .modifications {
+            line-height: 1.6;
+            background: #f7f7f7;
+            padding: 14px 18px;
+            border-radius: 6px;
+        }
+        footer {
+            margin-top: 40px;
+            padding: 20px;
+            text-align: center;
+            background: #333;
+            color: white;
+        }
+        a:focus-visible, button:focus-visible, input:focus-visible,
+        select:focus-visible {
+            outline: 3px solid #ffcc00;
+            outline-offset: 2px;
+        }
+        @media (max-width: 700px) {
+            header { text-align: center; padding: 18px 12px; }
+            header h1 { font-size: 24px; }
+            .navbar { flex-direction: column; }
+            .navbar a, .subnavbtn { width: 100%; text-align: left; }
+            .subnav-content {
+                position: static;
+                width: 100%;
+                min-width: 0;
+                box-shadow: none;
+                background: #555;
+            }
+            .subnav-content a { padding: 14px 30px; }
+            main { padding: 15px; }
+            .summary { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+            .course-grid { grid-template-columns: 1fr; }
+        }
+        @media print {
+            header, nav, .toolbar, .course-actions, footer, .notice,
+            #course-section, .modifications, .intro, .section-title.no-print {
+                display: none !important;
+            }
+            body { background: white; }
+            main { width: 100%; margin: 0; padding: 0; box-shadow: none; }
+            #planner-section { display: block !important; }
+        }
+    </style>
+</head>
+
+<body>
+<header>
+    <h1>This is for COP4813</h1>
+</header>
+
+<nav class="navbar" aria-label="Main navigation">
+    <a href="https://magmakingfj.github.io/COP4813/">
+        <i class="fa fa-home" aria-hidden="true"></i> Home
+    </a>
+
+    <div class="subnav">
+        <button class="subnavbtn" type="button" aria-expanded="false" aria-controls="classes-menu">
+            My Classes <i class="fa fa-caret-down" aria-hidden="true"></i>
+        </button>
+        <div class="subnav-content" id="classes-menu">
+            <a href="https://class.daytonastate.edu/d2l/home/511809">COP 4813 - Web Systems I</a>
+            <a href="https://class.daytonastate.edu/d2l/home/511711">CEN 4801 - Systems Integration</a>
+        </div>
+    </div>
+
+    <div class="subnav">
+        <button class="subnavbtn" type="button" aria-expanded="false" aria-controls="assignments-menu">
+            My Assignments <i class="fa fa-caret-down" aria-hidden="true"></i>
+        </button>
+        <div class="subnav-content" id="assignments-menu">
+            <a href="assignment3.html">Assignment 3 - Forms</a>
+            <a href="assignment4.html">Assignment 4 - Plotting</a>
+            <a href="Assignment5.html">Assignment 5 - Canvas</a>
+            <a href="Assignment6.html">Assignment 6 - JSON</a>
+            <a href="Assignment7.html">Assignment 7 - Drag Drop</a>
+            <a href="Assignment8.html">Assignment 8 - Lighthouse Audit</a>
+            <a href="Assignment9.html">Assignment 9 - Animation</a>
+            <a href="Assignment10.html">Assignment 10 - Mobile Ready</a>
+            <a href="Assignment11.html">Assignment 11 - Dynamic Class Advisor</a>
+        </div>
+    </div>
+</nav>
+
+<main>
+    <h2>Assignment 11 - BSIT Quick Class Advisor</h2>
+    <div class="intro">
+        <p>
+            This interactive class advisor is based on the Daytona State College
+            Bachelor of Science in Information Technology (BSIT) 2026-2027 degree
+            planner. Select the classes you have already completed, review the
+            courses that become available, and build a draft schedule across the
+            next six terms.
+        </p>
+        <p>
+            The advisor checks prerequisites, supports AND/OR prerequisite rules,
+            displays course notes, tracks credit hours, and creates a printable
+            schedule. Course information is stored in JSON and the course cards
+            and schedule controls are created dynamically with JavaScript.
+        </p>
+    </div>
+
+    <div class="notice">
+        <strong>Advising note:</strong> This is a planning aid and not an official
+        degree audit. Always confirm current course availability, transfer
+        equivalencies, catalog requirements, and your final schedule with a DSC
+        academic advisor. The workbook identifies the BSIT catalog year as
+        2026-2027. The workbook's Planner tab says to select two specialization
+        courses (6 credits), while its Requirement tab describes one course
+        (3 credits) and labels the requirement total differently. This page keeps
+        the specialization choices visible; confirm the correct graduation
+        requirement with an advisor.
+    </div>
+
+    <div class="summary" aria-live="polite">
+        <div class="summary-card"><strong id="completed-count">0</strong>Completed courses</div>
+        <div class="summary-card"><strong id="planned-count">0</strong>Planned courses</div>
+        <div class="summary-card"><strong id="credit-count">0</strong>Planned credits</div>
+        <div class="summary-card"><strong id="available-count">0</strong>Available courses</div>
+    </div>
+
+    <div class="toolbar">
+        <button class="action-button" id="auto-part">Create Part-Time Plan</button>
+        <button class="action-button" id="auto-full">Create Full-Time Plan</button>
+        <button class="action-button secondary" id="clear-plan">Clear Planned Courses</button>
+        <button class="action-button secondary" id="reset-all">Reset All Selections</button>
+        <button class="action-button" id="print-plan"><i class="fa fa-print" aria-hidden="true"></i> Print Schedule</button>
+    </div>
+    <div id="message" role="status" aria-live="polite"></div>
+
+    <h3 class="section-title no-print" id="course-section">Courses and Prerequisites</h3>
+    <p class="help-text">
+        Check the box beside a course if you have already completed it. To plan a
+        course, choose a term from its dropdown. A course can only be scheduled
+        when its prerequisite rules are satisfied before that term and it is
+        listed as offered in that season. Courses already completed are excluded
+        from the schedule.
+    </p>
+    <div id="course-groups"></div>
+
+    <h3 class="section-title" id="planner-section">Your Draft Course Plan</h3>
+    <div class="planner-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Term</th>
+                    <th>Courses</th>
+                    <th>Credit Hours</th>
+                </tr>
+            </thead>
+            <tbody id="plan-table"></tbody>
+        </table>
+    </div>
+
+    <h3 class="section-title no-print">Project Modifications</h3>
+    <div class="modifications">
+        <ul>
+            <li>Used the 2026-2027 BSIT degree planner and requirement worksheet from the supplied 2027 Degree Planner workbook.</li>
+            <li>Represented courses, credit hours, categories, terms offered, prerequisite rules, and course notes as JSON data.</li>
+            <li>Built course cards, completed-course checkboxes, term selectors, and the schedule table dynamically with JavaScript.</li>
+            <li>Added prerequisite checking with AND groups and OR alternatives. For example, Data Structures requires one programming course AND one discrete-math course.</li>
+            <li>Added notes explaining course choices and alternatives, including the requirement to select one course from each applicable option group.</li>
+            <li>Added part-time and full-time draft planning, credit-hour totals, schedule clearing, and a print-friendly schedule.</li>
+        </ul>
+    </div>
+</main>
+
+<footer>
+    <p>Created by Jean Fouquet</p>
+</footer>
+
+<!-- Course data is stored as JSON. Each prerequisite group is ANDed together;
+     courses inside a group are OR alternatives. -->
+<script type="application/json" id="course-data">
+{
+  "program": "Bachelor of Science in Information Technology",
+  "catalogYear": "2026-2027",
+  "terms": [
+    {"id":1,"label":"Fall 2027","season":"Fall"},
+    {"id":2,"label":"Spring 2028","season":"Spring"},
+    {"id":3,"label":"Summer 2028","season":"Summer"},
+    {"id":4,"label":"Fall 2028","season":"Fall"},
+    {"id":5,"label":"Spring 2029","season":"Spring"},
+    {"id":6,"label":"Summer 2029","season":"Summer"}
+  ],
+  "groups": [
+    {"id":"math","title":"Mathematics and General Prerequisites","note":"Complete the applicable mathematics and technical prerequisites. Some requirements allow a choice between equivalent courses.","courses":["MAC1105","MAC1114","MAC1140","MAC2311C","EGN2045","EGN3443","STA2023","COT3100","MAD2104"]},
+    {"id":"programming","title":"Programming, Digital, and Technical Prerequisites","note":"Select one programming option, one digital option, and satisfy the electrical requirement shown in the degree planner.","courses":["COP1000","COP2800","COP2360","COP2220","CET3116","CET1112C","EET3086","EET3085","EET1021C","EET1011C","CTS3348","CET1600","ENC1101","ENC2210"]},
+    {"id":"core","title":"BSIT Program Requirements","note":"These courses make up the program's required coursework. Check the prerequisite details on each course.","courses":["GEB3213","CIS4250","COP3530","CEN3722","COP4708","COP4610","CIS4360","CNT3104","CNT4007","CNT4703","CDA4101","CEN4801","CEN4010","COP4813","CIS4510"]},
+    {"id":"web","title":"Web Systems Specialization","note":"The degree planner lists Applied Database II and Web Systems II in this specialization. Confirm the required specialization selection with an advisor.","courses":["COP4709","COP4834"]},
+    {"id":"cyber","title":"Cybersecurity Specialization","note":"The degree planner lists these cybersecurity courses. Confirm the specialization and elective requirements with an advisor.","courses":["CET4860","CET4861","CET4862","CET4884"]}
+  ],
+  "courses": [
+    {"code":"MAC1105","name":"College Algebra","credits":3,"category":"Mathematics prerequisite","offered":["Fall","Spring","Summer"],"prereq":[],"note":"Foundational mathematics course shown in the BSIT requirement worksheet."},
+    {"code":"MAC1114","name":"Trigonometry","credits":3,"category":"Mathematics prerequisite","offered":["Fall","Spring","Summer"],"prereq":[],"note":"Listed as a mathematics prerequisite in the degree planner."},
+    {"code":"MAC1140","name":"Pre-Calculus","credits":3,"category":"Mathematics prerequisite","offered":["Fall","Spring","Summer"],"prereq":[["MAC1105"]],"note":"Requires College Algebra or an accepted higher-level equivalent."},
+    {"code":"MAC2311C","name":"Calculus I","credits":4,"category":"Mathematics option","offered":["Fall","Spring","Summer"],"prereq":[["MAC1140","EGN2045"]],"note":"The BSIT requirement sheet identifies Calculus I or Engineering Technical Calculus I as a calculus pathway option."},
+    {"code":"EGN2045","name":"Engineering Technical Calculus I","credits":4,"category":"Mathematics option","offered":["Fall","Spring"],"prereq":[["MAC1105"]],"note":"Technical calculus pathway option; verify placement and pathway requirements with an advisor."},
+    {"code":"EGN3443","name":"Probability and Statistics for Engineers","credits":3,"category":"Statistics option","offered":["Fall"],"prereq":[],"note":"Preferred statistics option in the BSIT requirement worksheet."},
+    {"code":"STA2023","name":"Elementary Statistics","credits":3,"category":"Statistics option","offered":["Fall","Spring","Summer"],"prereq":[],"note":"Alternative statistics course listed in the BSIT requirement worksheet."},
+    {"code":"COT3100","name":"Discrete Analysis","credits":3,"category":"Discrete mathematics option","offered":["Fall","Spring"],"prereq":[["MAC1105"]],"note":"Preferred discrete mathematics option."},
+    {"code":"MAD2104","name":"Discrete Mathematics","credits":3,"category":"Discrete mathematics option","offered":["Fall"],"prereq":[["MAC1105"]],"note":"Alternative discrete mathematics option listed in the BSIT requirement worksheet."},
+
+    {"code":"COP1000","name":"Principles of Computer Programming","credits":3,"category":"Programming prerequisite option","offered":["Fall","Spring","Summer"],"prereq":[],"note":"Listed in the 2027 planner prerequisite section. The requirement worksheet also lists COP2800, COP2360, or COP2220 as programming choices for later courses."},
+    {"code":"COP2800","name":"Computer Programming - Java","credits":3,"category":"Programming prerequisite option","offered":["Fall","Spring"],"prereq":[],"note":"One of the programming alternatives accepted by several BSIT course prerequisites."},
+    {"code":"COP2360","name":"C# Programming","credits":3,"category":"Programming prerequisite option","offered":["Fall","Spring","Summer"],"prereq":[],"note":"One of the programming alternatives accepted by several BSIT course prerequisites."},
+    {"code":"COP2220","name":"Computer Programming - C","credits":3,"category":"Programming prerequisite option","offered":["Fall","Spring"],"prereq":[],"note":"Alternative programming course listed in the requirement worksheet."},
+    {"code":"CET3116","name":"Digital Technology","credits":4,"category":"Digital prerequisite option","offered":["Fall","Spring","Summer"],"prereq":[],"note":"Preferred digital prerequisite option."},
+    {"code":"CET1112C","name":"Digital Fundamentals and Lab","credits":4,"category":"Digital prerequisite option","offered":["Fall","Spring","Summer"],"prereq":[],"note":"Alternative digital prerequisite option shown in the requirement worksheet."},
+    {"code":"EET3086","name":"Electrical Circuits","credits":3,"category":"Electrical prerequisite option","offered":["Fall","Spring","Summer"],"prereq":[],"note":"Preferred electrical prerequisite option."},
+    {"code":"EET3085","name":"Principles of Electrical Circuits - Lecture Only","credits":3,"category":"Electrical prerequisite option","offered":["Fall","Spring","Summer"],"prereq":[],"note":"The worksheet shows this lecture-only option paired with an additional electrical lab requirement. Confirm the correct combination with an advisor."},
+    {"code":"EET1021C","name":"Advanced Electrical Circuits and Lab","credits":4,"category":"Electrical prerequisite option","offered":["Fall","Spring"],"prereq":[],"note":"Listed as an electrical prerequisite alternative in the requirement worksheet."},
+    {"code":"EET1011C","name":"Introduction to Electrical Circuits and Lab","credits":4,"category":"Electrical prerequisite option","offered":["Fall","Spring"],"prereq":[],"note":"The requirement worksheet lists this as an electrical pathway option; verify the required pairing and current catalog details."},
+    {"code":"CTS3348","name":"Linux Administration","credits":3,"category":"Technical prerequisite","offered":["Fall","Summer"],"prereq":[["MAC1105"]],"note":"Preferred Linux administration prerequisite. The requirement worksheet lists MAC1105 or higher as its prerequisite."},
+    {"code":"CET1600","name":"Digital Systems course prerequisite","credits":3,"category":"Additional prerequisite option","offered":["Fall","Spring","Summer"],"prereq":[],"note":"Included as a prerequisite alternative because the BSIT worksheet references CET1600 or CNT3104 for Applied Cybersecurity."},
+    {"code":"ENC1101","name":"Composition I","credits":3,"category":"General education prerequisite","offered":["Fall","Spring","Summer"],"prereq":[],"note":"The requirement worksheet identifies ENC1101 as the prerequisite for Business Writing."},
+    {"code":"ENC2210","name":"Technical Report Writing","credits":3,"category":"Additional prerequisite option","offered":["Fall","Spring","Summer"],"prereq":[],"note":"Listed as an alternative prerequisite for Security Methods and Practices."},
+
+    {"code":"GEB3213","name":"Business Writing","credits":3,"category":"Program requirement","offered":["Fall","Spring","Summer"],"prereq":[["ENC1101"]],"note":"Prerequisite: ENC1101."},
+    {"code":"CIS4250","name":"Ethical Issues in IT","credits":1,"category":"Program requirement","offered":["Fall","Summer"],"prereq":[["GEB3213"]],"note":"Prerequisite: GEB3213."},
+    {"code":"COP3530","name":"Data Structures","credits":3,"category":"Program requirement","offered":["Fall","Spring"],"prereq":[["COP2800","COP2220","COP2360"],["COT3100","MAD2104"]],"note":"AND/OR rule: complete one programming course (COP2800 OR COP2220 OR COP2360) AND one discrete mathematics course (COT3100 OR MAD2104). You do not need every alternative."},
+    {"code":"CEN3722","name":"Human Computer Interfaces","credits":3,"category":"Program requirement","offered":["Fall","Spring"],"prereq":[["COP2800","COP2220","COP2360"]],"note":"Prerequisite: one of COP2800, COP2220, or COP2360."},
+    {"code":"COP4708","name":"Applied Database I","credits":3,"category":"Program requirement","offered":["Fall","Spring"],"prereq":[["COP2800","COP2220","COP2360"]],"note":"Prerequisite: one of COP2800, COP2220, or COP2360."},
+    {"code":"COP4610","name":"Operating Systems","credits":3,"category":"Program requirement","offered":["Fall","Spring"],"prereq":[["CTS3348"]],"note":"Prerequisite: CTS3348 Linux Administration."},
+    {"code":"CIS4360","name":"Applied Cybersecurity","credits":3,"category":"Program requirement","offered":["Fall","Spring","Summer"],"prereq":[["CTS3348"],["CET1600","CNT3104"]],"note":"AND/OR rule: CTS3348 AND either CET1600 OR CNT3104."},
+    {"code":"CNT3104","name":"Introduction to Telecommunications","credits":2,"category":"Program requirement","offered":["Fall","Summer"],"prereq":[["EET1021C","EET3086"]],"note":"Prerequisite: EET1021C OR EET3086."},
+    {"code":"CNT4007","name":"Data and Computer Communications","credits":3,"category":"Program requirement","offered":["Fall","Spring"],"prereq":[["CNT3104"],["STA2023","EGN3443"]],"note":"AND/OR rule: CNT3104 AND either STA2023 OR EGN3443."},
+    {"code":"CNT4703","name":"Voice and Data Network Design","credits":3,"category":"Program requirement","offered":["Fall","Summer"],"prereq":[["CNT4007"]],"note":"Prerequisite: CNT4007."},
+    {"code":"CDA4101","name":"Computer Organization and Design","credits":3,"category":"Program requirement","offered":["Fall","Spring"],"prereq":[["CET1112C","CET3116"]],"note":"Prerequisite: CET1112C OR CET3116."},
+    {"code":"CEN4801","name":"Systems Integration","credits":3,"category":"Program requirement","offered":["Fall"],"prereq":[["COP4708"],["COP3530"]],"note":"AND rule: both COP4708 and COP3530 must be completed."},
+    {"code":"CEN4010","name":"Software Engineering","credits":3,"category":"Program requirement","offered":["Spring"],"prereq":[["COP3530"]],"note":"Prerequisite: COP3530."},
+    {"code":"COP4813","name":"Web Systems I","credits":3,"category":"Program requirement","offered":["Fall"],"prereq":[["COP3530"]],"note":"Prerequisite: COP3530."},
+    {"code":"CIS4510","name":"IT Project Management","credits":3,"category":"Program requirement","offered":["Spring"],"prereq":[["CEN4801"]],"note":"Prerequisite: CEN4801 Systems Integration."},
+
+    {"code":"COP4709","name":"Applied Database II","credits":3,"category":"Web Systems specialization","offered":["Spring"],"prereq":[["COP4708"]],"note":"Prerequisite: COP4708. Listed under the Web Systems specialization."},
+    {"code":"COP4834","name":"Web Systems II","credits":3,"category":"Web Systems specialization","offered":["Spring"],"prereq":[["COP4813"],["COP4708"]],"note":"AND rule: both COP4813 and COP4708 must be completed. Listed under the Web Systems specialization."},
+    {"code":"CET4860","name":"Introduction to Digital Forensics","credits":3,"category":"Cybersecurity specialization","offered":["Spring","Summer"],"prereq":[["CIS4360"]],"note":"Prerequisite: CIS4360."},
+    {"code":"CET4861","name":"Advanced Digital Forensics","credits":3,"category":"Cybersecurity specialization","offered":["Fall"],"prereq":[["CET4860"]],"note":"Prerequisite: CET4860."},
+    {"code":"CET4862","name":"Network Forensics and Incident Response","credits":3,"category":"Cybersecurity specialization","offered":["Spring"],"prereq":[["CIS4360"]],"note":"Prerequisite: CIS4360."},
+    {"code":"CET4884","name":"Security Methods and Practices","credits":3,"category":"Cybersecurity specialization","offered":["Fall"],"prereq":[["GEB3213","ENC2210"]],"note":"Prerequisite: GEB3213 OR ENC2210."}
+  ]
+}
+</script>
+
+<script>
+    // Navigation dropdown behavior: works with mouse, keyboard, and touch.
+    const dropdowns = document.querySelectorAll(".subnav");
+    dropdowns.forEach(function(dropdown) {
+        const button = dropdown.querySelector(".subnavbtn");
+        button.addEventListener("click", function() {
+            const wasOpen = dropdown.classList.contains("open");
+            dropdowns.forEach(function(item) {
+                item.classList.remove("open");
+                item.querySelector(".subnavbtn").setAttribute("aria-expanded", "false");
+            });
+            if (!wasOpen) {
+                dropdown.classList.add("open");
+                button.setAttribute("aria-expanded", "true");
+            }
+        });
+    });
+    document.addEventListener("click", function(event) {
+        if (!event.target.closest(".navbar")) {
+            dropdowns.forEach(function(item) {
+                item.classList.remove("open");
+                item.querySelector(".subnavbtn").setAttribute("aria-expanded", "false");
+            });
+        }
+    });
+    document.addEventListener("keydown", function(event) {
+        if (event.key === "Escape") {
+            dropdowns.forEach(function(item) {
+                item.classList.remove("open");
+                item.querySelector(".subnavbtn").setAttribute("aria-expanded", "false");
+            });
+        }
+    });
+
+    // Load the JSON object embedded above.
+    const advisorData = JSON.parse(document.getElementById("course-data").textContent);
+    const courseByCode = new Map(advisorData.courses.map(course => [course.code, course]));
+    const completed = new Set();
+    const planned = new Map(); // course code -> term ID
+
+    const groupContainer = document.getElementById("course-groups");
+    const planTable = document.getElementById("plan-table");
+    const message = document.getElementById("message");
+
+    function termById(id) {
+        return advisorData.terms.find(term => term.id === Number(id));
+    }
+
+    function courseIsAvailableInTerm(course, term) {
+        return course.offered.includes(term.season);
+    }
+
+    // Every prerequisite group must be satisfied (AND).
+    // At least one course within each group must be completed or planned earlier (OR).
+    function prerequisiteStatus(course, termId) {
+        if (!course.prereq || course.prereq.length === 0) {
+            return { met: true, details: [] };
+        }
+
+        const details = [];
+        let allMet = true;
+
+        course.prereq.forEach(function(group) {
+            const satisfiedBy = group.find(function(code) {
+                if (completed.has(code)) return true;
+                const plannedTerm = planned.get(code);
+                return plannedTerm !== undefined && plannedTerm < Number(termId);
+            });
+
+            if (satisfiedBy) {
+                details.push("Satisfied by " + satisfiedBy);
+            } else {
+                allMet = false;
+                details.push("Complete one of: " + group.join(" OR "));
+            }
+        });
+
+        return { met: allMet, details: details };
+    }
+
+    function earliestAvailableTerm(course) {
+        for (const term of advisorData.terms) {
+            if (!courseIsAvailableInTerm(course, term)) continue;
+            if (prerequisiteStatus(course, term.id).met) return term.id;
+        }
+        return null;
+    }
+
+    function getCourseState(course) {
+        if (completed.has(course.code)) return "completed";
+        if (planned.has(course.code)) return "planned";
+        const firstTerm = earliestAvailableTerm(course);
+        return firstTerm === null ? "locked" : "available";
+    }
+
+    function renderCourses() {
+        groupContainer.innerHTML = "";
+
+        advisorData.groups.forEach(function(group) {
+            const section = document.createElement("section");
+            const heading = document.createElement("h4");
+            heading.className = "section-title";
+            heading.textContent = group.title;
+            section.appendChild(heading);
+
+            const note = document.createElement("p");
+            note.className = "help-text";
+            note.textContent = group.note;
+            section.appendChild(note);
+
+            const grid = document.createElement("div");
+            grid.className = "course-grid";
+
+            group.courses.forEach(function(code) {
+                const course = courseByCode.get(code);
+                if (!course) return;
+
+                const card = document.createElement("article");
+                card.className = "course-card";
+                card.dataset.course = course.code;
+                card.draggable = !completed.has(course.code);
+                card.addEventListener("dragstart", function(event) {
+                    event.dataTransfer.setData("text/plain", course.code);
+                    event.dataTransfer.effectAllowed = "move";
+                    card.classList.add("dragging");
+                });
+                card.addEventListener("dragend", function() {
+                    card.classList.remove("dragging");
+                });
+
+                const top = document.createElement("div");
+                top.className = "course-heading";
+
+                const titleWrap = document.createElement("div");
+                const codeText = document.createElement("div");
+                codeText.className = "course-code";
+                codeText.textContent = course.code;
+                const nameText = document.createElement("div");
+                nameText.className = "course-name";
+                nameText.textContent = course.name;
+                titleWrap.append(codeText, nameText);
+
+                const credits = document.createElement("span");
+                credits.className = "credits";
+                credits.textContent = course.credits + " credits";
+                top.append(titleWrap, credits);
+                card.appendChild(top);
+
+                const state = getCourseState(course);
+                const status = document.createElement("span");
+                status.className = "status";
+                if (state === "completed") {
+                    status.classList.add("done");
+                    status.textContent = "Completed";
+                    card.classList.add("completed");
+                } else if (state === "planned") {
+                    status.classList.add("good");
+                    status.textContent = "Planned for " + termById(planned.get(course.code)).label;
+                    card.classList.add("available");
+                } else if (state === "available") {
+                    status.classList.add("good");
+                    status.textContent = "Prerequisites currently met";
+                    card.classList.add("available");
+                } else {
+                    status.classList.add("wait");
+                    status.textContent = "Prerequisites not yet met";
+                    card.classList.add("locked");
+                }
+                card.appendChild(status);
+
+                const meta = document.createElement("div");
+                meta.className = "course-meta";
+                meta.textContent = "Offered: " + course.offered.join(", ") + ". " + course.note;
+                card.appendChild(meta);
+
+                if (course.prereq && course.prereq.length) {
+                    const prereq = document.createElement("p");
+                    prereq.className = "course-meta";
+                    prereq.textContent = "Prerequisites: " + course.prereq.map(group => "(" + group.join(" OR ") + ")").join(" AND ");
+                    card.appendChild(prereq);
+                } else {
+                    const prereq = document.createElement("p");
+                    prereq.className = "course-meta";
+                    prereq.textContent = "Prerequisites: None listed in the supplied worksheet.";
+                    card.appendChild(prereq);
+                }
+
+                const actions = document.createElement("div");
+                actions.className = "course-actions";
+
+                const completedLabel = document.createElement("label");
+                const completedBox = document.createElement("input");
+                completedBox.type = "checkbox";
+                completedBox.checked = completed.has(course.code);
+                completedBox.addEventListener("change", function() {
+                    if (completedBox.checked) {
+                        completed.add(course.code);
+                        planned.delete(course.code);
+                        message.textContent = course.code + " marked as completed.";
+                    } else {
+                        completed.delete(course.code);
+                        message.textContent = course.code + " removed from completed courses.";
+                    }
+                    refresh();
+                });
+                completedLabel.append(completedBox, document.createTextNode(" Completed"));
+                actions.appendChild(completedLabel);
+
+                const termSelect = document.createElement("select");
+                termSelect.setAttribute("aria-label", "Schedule " + course.code + " in a term");
+                const blank = document.createElement("option");
+                blank.value = "";
+                blank.textContent = "Choose term...";
+                termSelect.appendChild(blank);
+
+                advisorData.terms.forEach(function(term) {
+                    const option = document.createElement("option");
+                    option.value = term.id;
+                    option.textContent = term.label;
+                    const availability = courseIsAvailableInTerm(course, term);
+                    const prereqMet = prerequisiteStatus(course, term.id).met;
+                    option.disabled = !availability || !prereqMet || completed.has(course.code);
+                    if (!availability) option.textContent += " (not offered)";
+                    else if (!prereqMet) option.textContent += " (prerequisite needed)";
+                    termSelect.appendChild(option);
+                });
+
+                termSelect.value = planned.has(course.code) ? String(planned.get(course.code)) : "";
+                termSelect.addEventListener("change", function() {
+                    if (!termSelect.value) {
+                        planned.delete(course.code);
+                        message.textContent = course.code + " removed from your plan.";
+                        refresh();
+                        return;
+                    }
+
+                    const termId = Number(termSelect.value);
+                    const term = termById(termId);
+                    if (!courseIsAvailableInTerm(course, term) ||
+                        !prerequisiteStatus(course, termId).met ||
+                        completed.has(course.code)) {
+                        message.textContent = "That course cannot be scheduled in the selected term.";
+                        refresh();
+                        return;
+                    }
+
+                    planned.set(course.code, termId);
+                    message.textContent = course.code + " added to " + term.label + ".";
+                    refresh();
+                });
+
+                actions.appendChild(termSelect);
+                card.appendChild(actions);
+                grid.appendChild(card);
+            });
+
+            section.appendChild(grid);
+            groupContainer.appendChild(section);
+        });
+    }
+
+    function renderPlan() {
+        planTable.innerHTML = "";
+        let totalCredits = 0;
+
+        advisorData.terms.forEach(function(term) {
+            const row = document.createElement("tr");
+            const termCell = document.createElement("td");
+            termCell.textContent = term.label;
+            const coursesCell = document.createElement("td");
+            coursesCell.className = "term-drop-zone";
+            coursesCell.dataset.term = term.id;
+            coursesCell.setAttribute("aria-label", "Drop a course here to schedule it in " + term.label);
+            const creditsCell = document.createElement("td");
+
+            const termCourses = advisorData.courses.filter(course =>
+                planned.get(course.code) === term.id
+            );
+
+            if (termCourses.length === 0) {
+                coursesCell.classList.add("empty");
+                coursesCell.textContent = "No courses scheduled. Drag an eligible course here, or use its term menu above.";
+                creditsCell.textContent = "0";
+            } else {
+                const list = document.createElement("ul");
+                let termCredits = 0;
+                termCourses.forEach(function(course) {
+                    const item = document.createElement("li");
+                    item.textContent = course.code + " - " + course.name + " (" + course.credits + " credits)";
+                    list.appendChild(item);
+                    termCredits += course.credits;
+                });
+                coursesCell.appendChild(list);
+                creditsCell.textContent = termCredits;
+                totalCredits += termCredits;
+            }
+
+            row.append(termCell, coursesCell, creditsCell);
+            planTable.appendChild(row);
+
+            const hoursRow = document.createElement("tr");
+            hoursRow.className = "term-hours";
+            const labelCell = document.createElement("td");
+            labelCell.textContent = term.label + " total";
+            const spacerCell = document.createElement("td");
+            spacerCell.textContent = "";
+            const hoursCell = document.createElement("td");
+            hoursCell.textContent = termCourses.reduce((sum, course) => sum + course.credits, 0) + " credits";
+            hoursRow.append(labelCell, spacerCell, hoursCell);
+            planTable.appendChild(hoursRow);
+        });
+
+        document.getElementById("completed-count").textContent = completed.size;
+        document.getElementById("planned-count").textContent = planned.size;
+        document.getElementById("credit-count").textContent = totalCredits;
+        document.getElementById("available-count").textContent =
+            advisorData.courses.filter(course => !completed.has(course.code) &&
+                !planned.has(course.code) && getCourseState(course) === "available").length;
+    }
+
+    // Drag-and-drop scheduling: course cards are created dynamically and can
+    // be dropped into a term row. The same prerequisite and offering rules apply.
+    planTable.addEventListener("dragover", function(event) {
+        const zone = event.target.closest(".term-drop-zone");
+        if (!zone) return;
+        event.preventDefault();
+        zone.classList.add("drag-over");
+        event.dataTransfer.dropEffect = "move";
+    });
+
+    planTable.addEventListener("dragleave", function(event) {
+        const zone = event.target.closest(".term-drop-zone");
+        if (zone && !zone.contains(event.relatedTarget)) zone.classList.remove("drag-over");
+    });
+
+    planTable.addEventListener("drop", function(event) {
+        const zone = event.target.closest(".term-drop-zone");
+        if (!zone) return;
+        event.preventDefault();
+        zone.classList.remove("drag-over");
+        const code = event.dataTransfer.getData("text/plain");
+        const course = courseByCode.get(code);
+        const termId = Number(zone.dataset.term);
+        const term = termById(termId);
+
+        if (!course || completed.has(code)) {
+            message.textContent = "Choose a course that has not already been completed.";
+            return;
+        }
+        if (!courseIsAvailableInTerm(course, term)) {
+            message.textContent = code + " is not listed as offered in " + term.season + ".";
+            return;
+        }
+        if (!prerequisiteStatus(course, termId).met) {
+            message.textContent = "The prerequisites for " + code + " are not met before " + term.label + ".";
+            return;
+        }
+
+        planned.set(code, termId);
+        message.textContent = code + " added to " + term.label + " using drag and drop.";
+        refresh();
+    });
+
+    function refresh() {
+        renderCourses();
+        renderPlan();
+    }
+
+    function clearPlanned() {
+        planned.clear();
+        message.textContent = "All planned courses have been removed. Completed courses were kept.";
+        refresh();
+    }
+
+    function resetAll() {
+        completed.clear();
+        planned.clear();
+        message.textContent = "All selections have been reset.";
+        refresh();
+    }
+
+    // Draft schedule helper: choose eligible courses in sequence while respecting
+    // term availability, prerequisites, and a target credit-hour limit.
+    function createDraftSchedule(targetHours) {
+        planned.clear();
+
+        advisorData.terms.forEach(function(term) {
+            let termHours = 0;
+            let addedSomething = true;
+
+            while (addedSomething && termHours < targetHours) {
+                addedSomething = false;
+
+                for (const course of advisorData.courses) {
+                    if (completed.has(course.code) || planned.has(course.code)) continue;
+                    if (!courseIsAvailableInTerm(course, term)) continue;
+                    if (!prerequisiteStatus(course, term.id).met) continue;
+                    if (termHours + course.credits > targetHours) continue;
+
+                    planned.set(course.code, term.id);
+                    termHours += course.credits;
+                    addedSomething = true;
+                    break;
+                }
+            }
+        });
+
+        message.textContent = "Draft schedule created. Review the courses and credit hours before using it.";
+        refresh();
+    }
+
+    document.getElementById("auto-part").addEventListener("click", function() {
+        createDraftSchedule(6);
+    });
+    document.getElementById("auto-full").addEventListener("click", function() {
+        createDraftSchedule(12);
+    });
+    document.getElementById("clear-plan").addEventListener("click", clearPlanned);
+    document.getElementById("reset-all").addEventListener("click", resetAll);
+    document.getElementById("print-plan").addEventListener("click", function() {
+        window.print();
+    });
+
+    refresh();
+</script>
+</body>
+</html>
