@@ -1,0 +1,216 @@
+{
+  "systems": [
+    {
+      "name": "WordPress",
+      "support": "Open-source project maintained by the WordPress contributor community; widely supported by hosting companies.",
+      "technology": "PHP server-side application; MySQL or MariaDB database; commonly Apache or Nginx; HTML, CSS, and JavaScript in the browser.",
+      "capabilities": [
+        "Themes and a large plugin directory",
+        "Posts, pages, media library, users, and menus",
+        "Custom post types and taxonomies",
+        "REST API for integrations and headless websites"
+      ],
+      "limitations": [
+        "Self-hosted sites require maintenance of hosting, backups, updates, and security",
+        "Poorly maintained plugins or themes can cause vulnerabilities or conflicts",
+        "Complex customizations may require developer support"
+      ],
+      "example": {
+        "name": "The New York Times Company",
+        "url": "https://www.nytco.com/",
+        "proof": "https://wordpress.org/showcase/"
+      },
+      "sources": [
+        [
+          "Requirements",
+          "https://wordpress.org/about/requirements/"
+        ],
+        [
+          "Official showcase",
+          "https://wordpress.org/showcase/"
+        ],
+        [
+          "REST API",
+          "https://developer.wordpress.org/rest-api/"
+        ],
+        [
+          "Security handbook",
+          "https://developer.wordpress.org/advanced-administration/security/"
+        ],
+        [
+          "Plugin directory",
+          "https://wordpress.org/plugins/"
+        ]
+      ]
+    },
+    {
+      "name": "Drupal",
+      "support": "Open-source project developed by the Drupal community, with documentation and community support through Drupal.org.",
+      "technology": "PHP; MariaDB/MySQL, PostgreSQL, or SQLite; Apache/Nginx and other compatible web servers; HTML, CSS, and JavaScript.",
+      "capabilities": [
+        "Flexible content types, fields, and taxonomies",
+        "Modules extend features and integrations",
+        "Themes control layouts and presentation",
+        "Roles and permissions for complex editorial teams",
+        "API-first and multilingual capabilities"
+      ],
+      "limitations": [
+        "Setup and configuration can be more complex than hosted builders",
+        "Advanced implementations often need experienced developers",
+        "Modules and custom code need compatibility checks during upgrades"
+      ],
+      "example": {
+        "name": "General Electric",
+        "url": "https://www.ge.com/",
+        "proof": "https://www.drupal4u.org/showcases"
+      },
+      "sources": [
+        [
+          "System requirements",
+          "https://www.drupal.org/docs/getting-started/system-requirements"
+        ],
+        [
+          "PHP requirements",
+          "https://www.drupal.org/docs/getting-started/system-requirements/php-requirements"
+        ],
+        [
+          "Database requirements",
+          "https://www.drupal.org/docs/getting-started/system-requirements/database-server-requirements"
+        ],
+        [
+          "Modules directory",
+          "https://www.drupal.org/project/project_module"
+        ],
+        [
+          "Showcase examples",
+          "https://www.drupal4u.org/showcases"
+        ]
+      ]
+    },
+    {
+      "name": "Joomla",
+      "support": "Open-source CMS maintained by the Joomla project and volunteer community; third-party hosting and professional support are available.",
+      "technology": "PHP; MySQL, MariaDB, or PostgreSQL; Apache, Nginx, or Microsoft IIS; HTML, CSS, and JavaScript.",
+      "capabilities": [
+        "Templates control site appearance",
+        "Extensions provide components, modules, and plugins",
+        "User groups and access-control levels",
+        "Multilingual tools and menu management"
+      ],
+      "limitations": [
+        "Smaller extension ecosystem than WordPress",
+        "Self-hosted installations require updates, backups, and security management",
+        "Some extensions cost extra or may not be maintained for newer releases"
+      ],
+      "example": {
+        "name": "UIDAI - Aadhaar",
+        "url": "https://uidai.gov.in/",
+        "proof": "https://showcase.joomla.org/"
+      },
+      "sources": [
+        [
+          "Hosting setup and requirements",
+          "https://guide.joomla.org/user-guide/getting-started/getting-started-hosting-setup"
+        ],
+        [
+          "Technical requirements",
+          "https://manual.joomla.org/docs/next/get-started/technical-requirements/"
+        ],
+        [
+          "Extensions directory",
+          "https://extensions.joomla.org/"
+        ],
+        [
+          "Official showcase",
+          "https://showcase.joomla.org/"
+        ]
+      ]
+    },
+    {
+      "name": "Wix",
+      "support": "Commercial hosted website platform operated by Wix; hosting and platform maintenance are included with subscription plans.",
+      "technology": "Proprietary cloud platform. Wix manages server and database infrastructure. Browser output uses HTML, CSS, and JavaScript; CMS collections and APIs provide structured content; Velo supports custom development.",
+      "capabilities": [
+        "Visual drag-and-drop editor and templates",
+        "Managed hosting and platform updates",
+        "CMS collections and dynamic pages",
+        "Forms, bookings, and ecommerce tools",
+        "APIs and Velo for custom functionality"
+      ],
+      "limitations": [
+        "Less control over server infrastructure than self-hosted CMS products",
+        "CMS quotas and data limits can depend on the plan",
+        "Moving the complete design and functionality to another platform may require rebuilding",
+        "Custom development is limited to supported tools and APIs"
+      ],
+      "example": {
+        "name": "Dopple Press",
+        "url": "https://dopplepress.com/",
+        "proof": "https://www.wix.com/explore/websites"
+      },
+      "sources": [
+        [
+          "CMS overview",
+          "https://support.wix.com/en/article/cms-content-management-system-an-overview"
+        ],
+        [
+          "CMS developer documentation and limits",
+          "https://dev.wix.com/docs/overview/site-features-tools/cms"
+        ],
+        [
+          "Website examples",
+          "https://www.wix.com/explore/websites"
+        ],
+        [
+          "Velo developer platform",
+          "https://dev.wix.com/"
+        ]
+      ]
+    },
+    {
+      "name": "Shopify",
+      "support": "Commercial hosted ecommerce platform operated by Shopify Inc.; subscription plans include hosted store services.",
+      "technology": "Proprietary hosted SaaS. Storefront themes use Liquid with HTML, CSS, and JavaScript. Shopify manages commerce backend, checkout, data storage, and hosting; APIs and apps extend functionality.",
+      "capabilities": [
+        "Product catalog, inventory, cart, checkout, and orders",
+        "Themes and theme editor customize storefronts",
+        "App marketplace adds shipping, marketing, and reporting tools",
+        "Payment and sales-channel integrations",
+        "APIs support integrations and custom storefronts"
+      ],
+      "limitations": [
+        "Subscription, payment, transaction, and app costs can add up",
+        "Advanced checkout and platform customization depend on plan and extension points",
+        "Less control over server and database than self-hosted software",
+        "Complex features may require paid apps or developer assistance"
+      ],
+      "example": {
+        "name": "MollyJogger",
+        "url": "https://mollyjogger.com/",
+        "proof": "https://www.shopify.com/examples"
+      },
+      "sources": [
+        [
+          "Liquid documentation",
+          "https://shopify.dev/docs/api/liquid"
+        ],
+        [
+          "Theme architecture",
+          "https://shopify.dev/docs/storefronts/themes"
+        ],
+        [
+          "Platform APIs",
+          "https://shopify.dev/docs/api"
+        ],
+        [
+          "App Store",
+          "https://apps.shopify.com/"
+        ],
+        [
+          "Store examples",
+          "https://www.shopify.com/examples"
+        ]
+      ]
+    }
+  ]
+}

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Assignment 12 - CMS Review</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:#f4f4f4;color:#222}
+header{padding:20px;background:white}header h1{margin:0;font-size:30px}
+.navbar{display:flex;background:#333}.navbar a,.subnavbtn{color:white;padding:14px 16px;font-size:16px;text-decoration:none;border:0;background:inherit;font-family:inherit;cursor:pointer;display:block}
+.navbar a:hover,.subnavbtn:hover,.subnavbtn[aria-expanded=true]{background:red}.subnav{position:relative}
+.subnav-content{display:none;position:absolute;left:0;top:100%;min-width:250px;background:red;z-index:10;box-shadow:0 4px 8px #0003}
+.subnav.open .subnav-content{display:block}.subnav-content a{display:block;padding:12px 16px;color:white}.subnav-content a:hover{background:#eee;color:black}
+main{width:min(1400px,97%);margin:24px auto;padding:24px;background:white;border-radius:8px;box-shadow:0 2px 8px #0002}
+.intro{line-height:1.6}.note{background:#fff8e8;border-left:4px solid #d99a25;padding:12px 15px;margin:18px 0;line-height:1.5}
+.table-wrap{overflow-x:auto;margin-top:18px}table{width:100%;border-collapse:collapse;min-width:1100px}
+th,td{border:1px solid #ccc;padding:12px;text-align:left;vertical-align:top;line-height:1.5}th{background:#333;color:white}tbody tr:nth-child(even){background:#f8f8f8}
+td ul{margin:0;padding-left:19px}td li{margin-bottom:6px}.source-list{font-size:13px;padding-left:18px}
+a{overflow-wrap:anywhere}a:focus-visible,button:focus-visible{outline:3px solid #fc0;outline-offset:3px}
+.status{padding:14px;background:#f2f2f2;border-radius:5px}.footer-note{line-height:1.6;margin-top:24px}
+footer{margin-top:40px;padding:20px;text-align:center;background:#333;color:white}
+@media(max-width:700px){header{text-align:center;padding:18px 12px}header h1{font-size:24px}.navbar{flex-direction:column}.navbar a,.subnavbtn{width:100%;text-align:left}.subnav-content{position:static;width:100%;min-width:0;box-shadow:none;background:#555}.subnav-content a{padding:14px 30px}main{padding:15px}}
+</style>
+</head>
+<body>
+<header><h1>This is for COP4813</h1></header>
+<nav class="navbar" aria-label="Main navigation">
+<a href="https://magmakingfj.github.io/COP4813/"><i class="fa fa-home" aria-hidden="true"></i> Home</a>
+<div class="subnav"><button class="subnavbtn" type="button" aria-expanded="false" aria-controls="classes-menu">My Classes <i class="fa fa-caret-down" aria-hidden="true"></i></button>
+<div class="subnav-content" id="classes-menu"><a href="https://class.daytonastate.edu/d2l/home/511809">COP 4813 - Web Systems I</a><a href="https://class.daytonastate.edu/d2l/home/511711">CEN 4801 - Systems Integration</a></div></div>
+<div class="subnav"><button class="subnavbtn" type="button" aria-expanded="false" aria-controls="assignments-menu">My Assignments <i class="fa fa-caret-down" aria-hidden="true"></i></button>
+<div class="subnav-content" id="assignments-menu">
+<a href="assignment3.html">Assignment 3 - Forms</a><a href="assignment4.html">Assignment 4 - Plotting</a><a href="Assignment5.html">Assignment 5 - Canvas</a><a href="Assignment6.html">Assignment 6 - JSON</a><a href="Assignment7.html">Assignment 7 - Drag Drop</a><a href="Assignment8.html">Assignment 8 - Lighthouse Audit</a><a href="Assignment9.html">Assignment 9 - Animation</a><a href="Assignment10.html">Assignment 10 - Mobile Ready</a><a href="Assignment11.html">Assignment 11 - Dynamic Class Advisor</a><a href="Assignment12.html">Assignment 12 - CMS Review</a>
+</div></div></nav>
+<main>
+<h2>Assignment 12 - Content Management System (CMS) Review</h2>
+<div class="intro">
+<p>This page compares five content management systems: WordPress, Drupal, Joomla, Wix, and Shopify. The comparison covers support, technology, major capabilities, limitations, and an example website.</p>
+<p>The information is stored in the external JSON file <strong>cms-data.json</strong>. JavaScript fetches that file and generates the table dynamically.</p>
+</div>
+<div class="note"><strong>Research note:</strong> Limitations are practical considerations based on each platform's hosting model, requirements, and extension system. They are not problems that every website using the platform will experience. Example sites and research references are linked in the table.</div>
+<p id="loading-status" class="status" role="status" aria-live="polite">Loading CMS information...</p>
+<div class="table-wrap"><table id="cms-table" hidden><thead><tr><th>System</th><th>Produced / Supported By</th><th>Technology Base</th><th>Major Capabilities</th><th>Major Limitations</th><th>Example Site and Sources</th></tr></thead><tbody id="cms-table-body"></tbody></table></div>
+<div class="footer-note"><h3>Conclusion</h3><p>Each CMS is designed for different needs. WordPress, Drupal, and Joomla provide open-source options with control over hosting and customization, but require more responsibility for maintenance. Wix makes website creation and content management easier through a hosted visual platform. Shopify focuses on ecommerce and includes store-management features in a hosted service. The best choice depends on budget, technical skills, customization needs, and the type of website.</p></div>
+</main>
+<footer><p>Created by Jean Fouquet</p></footer>
+<script>
+const dropdowns=document.querySelectorAll(".subnav");
+dropdowns.forEach(dropdown=>{const button=dropdown.querySelector(".subnavbtn");button.addEventListener("click",()=>{const wasOpen=dropdown.classList.contains("open");dropdowns.forEach(item=>{item.classList.remove("open");item.querySelector(".subnavbtn").setAttribute("aria-expanded","false")});if(!wasOpen){dropdown.classList.add("open");button.setAttribute("aria-expanded","true")}})});
+document.addEventListener("click",event=>{if(!event.target.closest(".navbar"))dropdowns.forEach(item=>{item.classList.remove("open");item.querySelector(".subnavbtn").setAttribute("aria-expanded","false")})});
+document.addEventListener("keydown",event=>{if(event.key==="Escape")dropdowns.forEach(item=>{item.classList.remove("open");item.querySelector(".subnavbtn").setAttribute("aria-expanded","false")})});
+function makeLink(label,url){const a=document.createElement("a");a.href=url;a.textContent=label;a.target="_blank";a.rel="noopener noreferrer";return a}
+function makeList(values){const ul=document.createElement("ul");values.forEach(value=>{const li=document.createElement("li");li.textContent=value;ul.appendChild(li)});return ul}
+function renderCMS(data){const body=document.getElementById("cms-table-body");data.systems.forEach(system=>{const tr=document.createElement("tr");
+const name=document.createElement("td");name.textContent=system.name;
+const support=document.createElement("td");support.textContent=system.support;
+const technology=document.createElement("td");technology.textContent=system.technology;
+const capabilities=document.createElement("td");capabilities.appendChild(makeList(system.capabilities));
+const limitations=document.createElement("td");limitations.appendChild(makeList(system.limitations));
+const example=document.createElement("td");const exampleLink=makeLink(system.example.name,system.example.url);exampleLink.style.fontWeight="bold";example.appendChild(exampleLink);
+const proof=document.createElement("p");proof.append("Example listing: ",makeLink("verification source",system.example.proof));example.appendChild(proof);
+const heading=document.createElement("strong");heading.textContent="Research sources:";example.appendChild(heading);
+const sources=document.createElement("ul");sources.className="source-list";system.sources.forEach(source=>{const li=document.createElement("li");li.appendChild(makeLink(source[0],source[1]));sources.appendChild(li)});example.appendChild(sources);
+tr.append(name,support,technology,capabilities,limitations,example);body.appendChild(tr)});
+document.getElementById("cms-table").hidden=false;document.getElementById("loading-status").textContent="Loaded "+data.systems.length+" CMS platforms from cms-data.json."}
+fetch("cms-data.json").then(response=>{if(!response.ok)throw new Error("HTTP "+response.status);return response.json()}).then(renderCMS).catch(error=>{document.getElementById("loading-status").textContent="Unable to load cms-data.json. Upload it to the same repository folder as Assignment12.html. Details: "+error.message});
+</script>
+</body>
+</html>
