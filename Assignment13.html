@@ -6,6 +6,9 @@
 <title>Assignment 13 - Signal Sleuth</title>
 <link rel="stylesheet" href="style.css">
 <style>
+.site-header{background:#222;color:white;text-align:center;padding:20px}.site-header h1{margin:0}
+.navbar{display:flex;align-items:center;background:#333}.navbar>a,.dropdown-button{display:block;color:white;padding:14px 18px;text-decoration:none;border:0;background:none;font-size:16px;cursor:pointer;font-family:inherit}.navbar>a:hover,.dropdown-button:hover{background:#555}.dropdown{position:relative}.dropdown-content{display:none;position:absolute;top:100%;left:0;min-width:210px;background:#333;z-index:1000;box-shadow:0 4px 8px rgba(0,0,0,.2)}.dropdown-content a{display:block;color:white;padding:12px 16px;text-decoration:none}.dropdown-content a:hover{background:#555}.dropdown-content.show{display:block}.navbar a:focus-visible,.dropdown-button:focus-visible{outline:2px solid white;outline-offset:-3px}
+@media(max-width:620px){.navbar{flex-direction:column;align-items:stretch}.navbar>a,.dropdown-button{width:100%;text-align:left;box-sizing:border-box}.dropdown-content{position:static;width:100%;box-shadow:none}}
 .game{max-width:900px;margin:28px auto;padding:20px}.panel{background:#f2f6fa;border:1px solid #d5dfeb;border-radius:14px;padding:20px}
 .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.stat{background:white;padding:12px;border-radius:9px;text-align:center}.stat strong{display:block;font-size:1.5rem;color:#174f7e}
 .scenario{background:white;border-left:5px solid #2874b8;padding:18px;margin:18px 0;border-radius:8px}.answers{display:grid;grid-template-columns:1fr 1fr;gap:10px}
@@ -15,7 +18,35 @@ button.main{background:#174f7e;color:white;border:0;border-radius:8px;padding:12
 </style>
 </head>
 <body>
-<div id="site-navigation"></div>
+<header class="site-header">
+    <h1>This is for COP4813</h1>
+</header>
+<nav class="navbar" aria-label="Main navigation">
+    <a href="index.html">Home</a>
+    <div class="dropdown">
+        <button class="dropdown-button" type="button" aria-expanded="false" aria-controls="classes-menu">My Classes</button>
+        <div class="dropdown-content" id="classes-menu">
+            <a href="https://class.daytonastate.edu/d2l/home/511809">COP 4813</a>
+            <a href="https://class.daytonastate.edu/d2l/home/511711">CEN 4801</a>
+        </div>
+    </div>
+    <div class="dropdown">
+        <button class="dropdown-button" type="button" aria-expanded="false" aria-controls="assignments-menu">My Assignments</button>
+        <div class="dropdown-content" id="assignments-menu">
+            <a href="Assignment3.html">Assignment 3</a>
+            <a href="Assignment4.html">Assignment 4</a>
+            <a href="Assignment5.html">Assignment 5</a>
+            <a href="Assignment6.html">Assignment 6</a>
+            <a href="Assignment7.html">Assignment 7</a>
+            <a href="Assignment8.html">Assignment 8</a>
+            <a href="Assignment9.html">Assignment 9</a>
+            <a href="Assignment10.html">Assignment 10</a>
+            <a href="Assignment11.html">Assignment 11</a>
+            <a href="Assignment12.html">Assignment 12 - CMS Review</a>
+            <a href="Assignment13.html">Assignment 13 - Signal Sleuth</a>
+        </div>
+    </div>
+</nav>
 <main class="game">
 <h2 style="text-align:center">Assignment 13 - Signal Sleuth</h2>
 <p style="text-align:center"><strong>Restore the network. Solve the problem. Keep the systems online!</strong></p>
@@ -36,7 +67,7 @@ button.main{background:#174f7e;color:white;border:0;border-radius:8px;padding:12
 <section><h3>How to Play</h3><ul><li>Click Start Game to begin the 60-second mission.</li><li>Read the IT problem and choose one of four possible solutions.</li><li>Correct answers earn 100 points and improve network stability.</li><li>Incorrect answers cost one life and reduce network stability.</li><li>The game ends when time runs out or all three lives are lost.</li><li>Your final score and accuracy measure your performance.</li></ul><p><strong>Learning goal:</strong> Practice identifying sensible first troubleshooting steps for common computer, account, and network problems.</p></section>
 </main>
 <footer style="text-align:center;padding:20px">Created by Jean Fouquet</footer>
-<script src="navigation.js"></script>
+
 <script>
 "use strict";
 const questions=[
@@ -62,6 +93,20 @@ function choose(i,selected){if(!active||locked)return;locked=true;answered++;let
 function next(){if(!active||!locked)return;if(lives<=0){end("Your network ran out of stability!");return}show()}
 function end(reason){if(!active)return;active=false;clearInterval(clock);$("play").classList.add("hidden");$("results").classList.remove("hidden");$("resultTitle").textContent=reason;$("resultMessage").textContent="Review your results and try to beat your score.";$("finalScore").textContent=score;$("finalSolved").textContent=solved;$("accuracy").textContent=(answered?Math.round(solved/answered*100):0)+"%";stats()}
 $("start").onclick=start;$("restart").onclick=start;$("again").onclick=start;$("next").onclick=next;stats();
+</script>
+<script>
+document.addEventListener("DOMContentLoaded",function(){
+ const nav=document.querySelector(".navbar");
+ const buttons=nav.querySelectorAll(".dropdown-button");
+ buttons.forEach(function(button){button.addEventListener("click",function(){
+  const menu=document.getElementById(button.getAttribute("aria-controls"));
+  const wasOpen=button.getAttribute("aria-expanded")==="true";
+  buttons.forEach(function(other){other.setAttribute("aria-expanded","false");document.getElementById(other.getAttribute("aria-controls")).classList.remove("show");});
+  if(!wasOpen&&menu){button.setAttribute("aria-expanded","true");menu.classList.add("show");}
+ });});
+ document.addEventListener("click",function(event){if(!nav.contains(event.target)){buttons.forEach(function(button){button.setAttribute("aria-expanded","false");document.getElementById(button.getAttribute("aria-controls")).classList.remove("show");});}});
+ document.addEventListener("keydown",function(event){if(event.key==="Escape"){buttons.forEach(function(button){button.setAttribute("aria-expanded","false");document.getElementById(button.getAttribute("aria-controls")).classList.remove("show");});}});
+});
 </script>
 </body>
 </html>
